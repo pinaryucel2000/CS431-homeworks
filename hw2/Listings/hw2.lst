@@ -1,0 +1,359 @@
+C51 COMPILER V9.60.0.0   HW2                                                               10/29/2021 16:12:42 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HW2
+OBJECT MODULE PLACED IN .\Objects\hw2.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE hw2.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\hw2.l
+                    -st) TABS(2) OBJECT(.\Objects\hw2.obj)
+
+line level    source
+
+   1          #include <REG51.H>
+   2          #include <inttypes.h>
+   3          #include "stdio.h"
+   4          #include <string.h>
+   5          #include "lcd.h"
+   6          
+   7          #define SYS_CLOCK 29.4912
+   8          #define TR_CLOCK 2.4576 // SYS_CLOCK / 12 (MHz)
+   9          #define STEP 0.0004069 // 1 / TR_CLOCK(Hz) (ms)
+  10          
+  11          // These variables are calculated before the delay function
+  12          // is called to have a more optimized delay function.
+  13          uint16_t TL0_value;
+  14          uint16_t TH0_value;
+  15          
+  16          // Keypad setup
+  17          sbit R1 = P0^0;
+  18          sbit R2 = P0^1;
+  19          sbit R3 = P0^2;
+  20          sbit R4 = P0^3;
+  21          sbit C1 = P0^4;
+  22          sbit C2 = P0^5;
+  23          sbit C3 = P0^6;
+  24          
+  25          // LCS setup
+  26          sbit DB7 = P1^7;
+  27          sbit DB6 = P1^6;
+  28          sbit DB5 = P1^5;
+  29          sbit DB4 = P1^4;
+  30          sbit RS = P1^3;
+  31          sbit E = P1^2;
+  32          sbit clear = P2^4;
+  33          sbit ret = P2^5;          
+  34          sbit left = P2^6;
+  35          sbit right = P2^7;
+  36          
+  37          // Below are the functions to use LCD.
+  38          // All of the code below is taken from: https://www.edsim51.com/examples.html#prog4
+  39          void returnHome(void);
+  40          void entryModeSet(bit id, bit s);
+  41          void displayOnOffControl(bit display, bit cursor, bit blinking);
+  42          void cursorOrDisplayShift(bit sc, bit rl);
+  43          void functionSet(void);
+  44          void setDdRamAddress(char address);
+  45          void sendChar(char c);
+  46          void sendString(char* str);
+  47          bit getBit(char c, char bitNumber);
+  48          void delay();
+  49          
+  50          // My functions
+  51          char read_keypad();
+  52          void set_timer_values(uint16_t delay);
+  53          void delay(); // delay amount is determined by set_timer_values before this function is called
+  54          void print(char* first_line, char* second_line);
+C51 COMPILER V9.60.0.0   HW2                                                               10/29/2021 16:12:42 PAGE 2   
+
+  55          
+  56          void main (void){
+  57   1        uint8_t c;
+  58   1        char text_input[2];
+  59   1        char keypad_input[4];
+  60   1        SCON  = 0x50;                   /* SCON: mode 1, 8-bit UART, enable rcvr    */
+  61   1        TMOD |= 0x21;                   /* TMOD: timer 1, mode 2, timer 0, mode 1   */
+  62   1        TH1   = 0xfc;                   /* TH1:  252                                */
+  63   1        TR1   = 1;                      /* TR1:  timer 1 run                        */
+  64   1        TI    = 1;                      /* TI:   set TI to send first char of UART  */
+  65   1      
+  66   1        // Delay function is initially set to create 20ms delays
+  67   1        set_timer_values(20);
+  68   1      
+  69   1        // LCD settings
+  70   1        functionSet();
+  71   1        entryModeSet(1, 0); // increment and no shift
+  72   1        displayOnOffControl(1, 1, 1); // display on, cursor on and blinking on
+  73   1        
+  74   1        // Input settings
+  75   1        keypad_input[3] = '\0';
+  76   1        text_input[1] = '\0';
+  77   1        
+  78   1        while(1){
+  79   2          // 1. Receive a character and echo it back
+  80   2          printf("Send a character. ");
+  81   2        
+  82   2          text_input[0] = _getkey();  
+  83   2          
+  84   2          // Tests: _getkey(), getchar(), getc()
+  85   2          // scanf("%c", &text_input[0]);  
+  86   2          // text_input[0] = getchar();
+  87   2          
+  88   2          // getc(); There is no file system in 8051?
+  89   2          
+  90   2          printf(" You sent '%c'.\n", text_input[0]); // Echo
+  91   2          
+  92   2          // 2. Wait for 20ms period (period can be changed with set_timer_values(delay) function)
+  93   2          delay();
+  94   2          
+  95   2          // 3. print the char in first line
+  96   2          print(text_input, "");
+  97   2      
+  98   2          // 4. Make an keypad reading
+  99   2          set_timer_values(10);
+ 100   2          printf("Click 3 buttons on keypad.\n ");
+ 101   2          keypad_input[0] = read_keypad();
+ 102   2          keypad_input[1] = read_keypad();
+ 103   2          keypad_input[2] = read_keypad();
+ 104   2          
+ 105   2          printf("Keypad input: %s\n", keypad_input);
+ 106   2          print("", keypad_input);
+ 107   2        }
+ 108   1      }
+*** WARNING C280 IN LINE 57 OF hw2.c: 'c': unreferenced local variable
+ 109          
+ 110          void set_timer_values(uint16_t delay){
+ 111   1        float value = 65536 - delay / STEP; // Should be greater than 0
+ 112   1        TL0_value = ((uint16_t)value & 0x00ff);
+ 113   1        TH0_value = ((uint16_t)value & 0xff00) >> 8;
+ 114   1      }
+ 115          
+C51 COMPILER V9.60.0.0   HW2                                                               10/29/2021 16:12:42 PAGE 3   
+
+ 116          // delay_time is in milliseconds
+ 117          void delay(){
+ 118   1        TL0 = TL0_value;
+ 119   1        TH0 = TH0_value;
+ 120   1        TR0 = 1;
+ 121   1        while(TF0 == 0){};
+ 122   1        TR0 = 0;
+ 123   1        TF0 = 0;
+ 124   1      }
+ 125          
+ 126          // Prints to LCD.
+ 127          void print(char* first_line, char* second_line){
+ 128   1        
+ 129   1        if(first_line != ""){
+ 130   2          setDdRamAddress(0x00); // set address to start of first line
+ 131   2          sendString(first_line);
+ 132   2        }
+ 133   1      
+ 134   1        if(second_line != ""){
+ 135   2          setDdRamAddress(0x40); // set address to start of second line
+ 136   2          sendString(second_line);
+ 137   2        }
+ 138   1        
+ 139   1          if (ret == 0) {
+ 140   2            returnHome();
+ 141   2          }
+ 142   1          else {  
+ 143   2            if (left == 0 && right == 1) {
+ 144   3              cursorOrDisplayShift(1, 0); // shift display left
+ 145   3            }
+ 146   2            else if (left == 1 && right == 0) {
+ 147   3              cursorOrDisplayShift(1, 1); // shift display right
+ 148   3            } 
+ 149   2          } 
+ 150   1      }
+ 151          
+ 152          char read_keypad()
+ 153          {
+ 154   1        while(1){
+ 155   2          C1=1;
+ 156   2          C2=1;
+ 157   2          C3=1;
+ 158   2          
+ 159   2          R1=0;
+ 160   2          R2=1;
+ 161   2          R3=1;
+ 162   2          R4=1;
+ 163   2          
+ 164   2          if(C1==0){delay();while(C1==0);return '#';}
+ 165   2          if(C2==0){delay();while(C2==0);return '0';}
+ 166   2          if(C3==0){delay();while(C3==0);return '*';}
+ 167   2          
+ 168   2          R1=1;
+ 169   2          R2=0;
+ 170   2          R3=1;
+ 171   2          R4=1;
+ 172   2      
+ 173   2          if(C1==0){delay();while(C1==0);return '9';}
+ 174   2          if(C2==0){delay();while(C2==0);return '8';}
+ 175   2          if(C3==0){delay();while(C3==0);return '7';}
+ 176   2            
+ 177   2          R1=1;
+C51 COMPILER V9.60.0.0   HW2                                                               10/29/2021 16:12:42 PAGE 4   
+
+ 178   2          R2=1;
+ 179   2          R3=0;
+ 180   2          R4=1;
+ 181   2      
+ 182   2          if(C1==0){delay();while(C1==0);return '6';}
+ 183   2          if(C2==0){delay();while(C2==0);return '5';}
+ 184   2          if(C3==0){delay();while(C3==0);return '4';}
+ 185   2          
+ 186   2          R1=1;
+ 187   2          R2=1;
+ 188   2          R3=1;
+ 189   2          R4=0;
+ 190   2      
+ 191   2          if(C1==0){delay();while(C1==0);return '3';}
+ 192   2          if(C2==0){delay();while(C2==0);return '2';}
+ 193   2          if(C3==0){delay();while(C3==0);return '1';} 
+ 194   2        }
+ 195   1      }
+ 196          
+ 197          void returnHome(void) {
+ 198   1        RS = 0;
+ 199   1        DB7 = 0;
+ 200   1        DB6 = 0;
+ 201   1        DB5 = 0;
+ 202   1        DB4 = 0;
+ 203   1        E = 1;
+ 204   1        E = 0;
+ 205   1        DB5 = 1;
+ 206   1        E = 1;
+ 207   1        E = 0;
+ 208   1        delay();
+ 209   1      } 
+ 210          
+ 211          void entryModeSet(bit id, bit s) {
+ 212   1        RS = 0;
+ 213   1        DB7 = 0;
+ 214   1        DB6 = 0;
+ 215   1        DB5 = 0;
+ 216   1        DB4 = 0;
+ 217   1        E = 1;
+ 218   1        E = 0;
+ 219   1        DB6 = 1;
+ 220   1        DB5 = id;
+ 221   1        DB4 = s;
+ 222   1        E = 1;
+ 223   1        E = 0;
+ 224   1        delay();
+ 225   1      }
+ 226          
+ 227          void displayOnOffControl(bit display, bit cursor, bit blinking) {
+ 228   1        DB7 = 0;
+ 229   1        DB6 = 0;
+ 230   1        DB5 = 0;
+ 231   1        DB4 = 0;
+ 232   1        E = 1;
+ 233   1        E = 0;
+ 234   1        DB7 = 1;
+ 235   1        DB6 = display;
+ 236   1        DB5 = cursor;
+ 237   1        DB4 = blinking;
+ 238   1        E = 1;
+ 239   1        E = 0;
+C51 COMPILER V9.60.0.0   HW2                                                               10/29/2021 16:12:42 PAGE 5   
+
+ 240   1        delay();
+ 241   1      }
+ 242          
+ 243          void cursorOrDisplayShift(bit sc, bit rl) {
+ 244   1        RS = 0;
+ 245   1        DB7 = 0;
+ 246   1        DB6 = 0;
+ 247   1        DB5 = 0;
+ 248   1        DB4 = 1;
+ 249   1        E = 1;
+ 250   1        E = 0;
+ 251   1        DB7 = sc;
+ 252   1        DB6 = rl;
+ 253   1        E = 1;
+ 254   1        E = 0;
+ 255   1        delay();
+ 256   1      }
+ 257          
+ 258          void functionSet(void) {
+ 259   1        DB7 = 0;
+ 260   1        DB6 = 0;
+ 261   1        DB5 = 1;
+ 262   1        DB4 = 0;
+ 263   1        RS = 0;
+ 264   1        E = 1;
+ 265   1        E = 0;
+ 266   1        delay();
+ 267   1        E = 1;
+ 268   1        E = 0;
+ 269   1        DB7 = 1;
+ 270   1        E = 1;
+ 271   1        E = 0;
+ 272   1        delay();
+ 273   1      }
+ 274          
+ 275          void setDdRamAddress(char address) {
+ 276   1        RS = 0;
+ 277   1        DB7 = 1;
+ 278   1        DB6 = getBit(address, 6);
+ 279   1        DB5 = getBit(address, 5);
+ 280   1        DB4 = getBit(address, 4);
+ 281   1        E = 1;
+ 282   1        E = 0;
+ 283   1        DB7 = getBit(address, 3);
+ 284   1        DB6 = getBit(address, 2);
+ 285   1        DB5 = getBit(address, 1);
+ 286   1        DB4 = getBit(address, 0);
+ 287   1        E = 1;
+ 288   1        E = 0;
+ 289   1        delay();
+ 290   1      }
+ 291          
+ 292          void sendChar(char c) {
+ 293   1        DB7 = getBit(c, 7);
+ 294   1        DB6 = getBit(c, 6);
+ 295   1        DB5 = getBit(c, 5);
+ 296   1        DB4 = getBit(c, 4);
+ 297   1        RS = 1;
+ 298   1        E = 1;
+ 299   1        E = 0;
+ 300   1        DB7 = getBit(c, 3);
+ 301   1        DB6 = getBit(c, 2);
+C51 COMPILER V9.60.0.0   HW2                                                               10/29/2021 16:12:42 PAGE 6   
+
+ 302   1        DB5 = getBit(c, 1);
+ 303   1        DB4 = getBit(c, 0);
+ 304   1        E = 1;
+ 305   1        E = 0;
+ 306   1        delay();
+ 307   1      }
+ 308          
+ 309          // -- End of LCD Module instructions
+ 310          // --------------------------------------------------------------------
+ 311          
+ 312          void sendString(char* str) {
+ 313   1        int index = 0;
+ 314   1        while (str[index] != 0) {
+ 315   2          sendChar(str[index]);
+ 316   2          index++;
+ 317   2        }
+ 318   1      }
+ 319          
+ 320          bit getBit(char c, char bitNumber) {
+ 321   1        return (c >> bitNumber) & 1;
+ 322   1      }
+*** WARNING C290 IN LINE 84 OF hw2.c: missing return value
+*** WARNING C290 IN LINE 176 OF hw2.c: missing return value
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1498    ----
+   CONSTANT SIZE    =     84    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4      39
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       7
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  3 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,286 @@
+C51 COMPILER V9.60.0.0   HW3                                                               11/12/2021 17:47:24 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HW3
+OBJECT MODULE PLACED IN .\Objects\hw3.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE hw3.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\hw3.l
+                    -st) TABS(2) OBJECT(.\Objects\hw3.obj)
+
+line level    source
+
+   1          #include <REG51.H>
+   2          #include <inttypes.h>
+   3          #include "stdio.h"
+   4          #include <string.h>
+   5          #include <stdlib.h>
+   6          
+   7          #define L 204
+   8          #define S 102
+   9          #define MAX_BUFFER_SIZE 4
+  10          #define SYS_CLOCK 29.4912
+  11          #define TR_CLOCK 2.4576 // SYS_CLOCK / 12 (MHz)
+  12          #define STEP 0.0004069 // 1 / TR_CLOCK(Hz) (ms) 
+  13          
+  14          // These variables are calculated before the delay function
+  15          // is called to have a more optimized delay function.
+  16          uint16_t TL0_value;
+  17          uint16_t TH0_value;
+  18          
+  19          char buffer[MAX_BUFFER_SIZE] = {'F', 'F', 'F', 'F'};
+  20          char flash_buffer[MAX_BUFFER_SIZE];
+  21          uint16_t buffer_size = 0;
+  22          uint16_t flash_buffer_size = 0;
+  23          uint16_t fi = 0;
+  24          char last_input = '\0';
+  25          
+  26          uint8_t morse_lookup[10][4] =  {{'S', 'S', 'S', 'S'}, // 0
+  27                                          {'L', 'S', 'S', 'S'}, // 1
+  28                                          {'S', 'L', 'S', 'S'}, // 2
+  29                                          {'S', 'S', 'L', 'S'}, // 3
+  30                                          {'S', 'S', 'S', 'L'}, // 4
+  31                                          {'L', 'S', 'S', 'L'}, // 5
+  32                                          {'S', 'L', 'S', 'L'}, // 6
+  33                                          {'S', 'S', 'L', 'L'}, // 7
+  34                                          {'L', 'S', 'L', 'L'}, // 8
+  35                                          {'S', 'L', 'L', 'L'}  // 9
+  36                                         };
+  37          
+  38          void delay(uint16_t max); 
+  39          void append_buffer(char value);         
+  40          uint16_t is_valid(char value);            
+  41          void flash_char(char value);  
+  42          void flash_long();
+  43          void flash_short();   
+  44          void flash_string(char* value);         
+  45          void set_timer_values(uint16_t delay);
+  46          void delay_with_timer(); // delay amount is determined by set_timer_values before this function is called 
+             -                             
+  47          
+  48          
+  49          void serial_isr() interrupt 4{
+  50   1        if(RI == 1){
+  51   2          last_input = SBUF;
+  52   2          SBUF = last_input;  
+  53   2          RI = 0;
+C51 COMPILER V9.60.0.0   HW3                                                               11/12/2021 17:47:24 PAGE 2   
+
+  54   2        }
+  55   1        else if(TI == 1){
+  56   2          TI = 0;              
+  57   2        }
+  58   1      }
+  59          
+  60          
+  61          void main (void){
+  62   1        SCON  = 0x50;                   /* SCON: mode 1, 8-bit UART, enable rcvr    */
+  63   1        TMOD |= 0x21;                   /* TMOD: timer 1, mode 2, timer 0, mode 1   */
+  64   1        TH1   = 0xfc;                   /* TH1:  252                                */
+  65   1        TR1   = 1;                      /* TR1:  timer 1 run                        */
+  66   1        TI    = 1;                      /* TI:   set TI to send first char of UART  */  
+  67   1        P0 = 00000000;
+  68   1        
+  69   1        set_timer_values(20);
+  70   1      
+  71   1        ES  = 1;      // Enable Serial INterrupt
+  72   1        EA  = 1;      // Enable Global Interrupt bit
+  73   1      
+  74   1        
+  75   1        while(1){
+  76   2            // 1. Demonstrate you are able to receive chars by echoing them back.
+  77   2            // Do not need to do anything. ISR already does this.
+  78   2          
+  79   2            if(last_input != '\0' && last_input != '\n'){
+  80   3              append_buffer(last_input);  
+  81   3              last_input = '\0';  
+  82   3            }
+  83   2            
+  84   2            // 2. Demonstrate you are able to save sequences by printing them back when enter is pressed. 
+  85   2            if(last_input == '\n') {
+  86   3              
+  87   3              RI = 1; 
+  88   3              printf("%c", buffer[0]); 
+  89   3              RI = 0;
+  90   3              printf("%c", buffer[1]);  
+  91   3              RI = 0;
+  92   3              printf("%c", buffer[2]);  
+  93   3              RI = 0;
+  94   3              printf("%c", buffer[3]);  
+  95   3            
+  96   3              last_input = '\0';      
+  97   3            }
+  98   2          
+  99   2        }
+ 100   1        
+ 101   1        while(1){
+ 102   2            // 3. Demonstrate you are able to flash certain hard-coded chars. 
+ 103   2            flash_char('1');
+ 104   2            delay(100);
+ 105   2            flash_char('2');
+ 106   2            delay(100);
+ 107   2            
+ 108   2            // 4. Demonstrate you are able to flash hard-coded strings.
+ 109   2            // 5. Demonstrate you can report back to serial when you finish flashing strings.
+ 110   2            flash_string("h9e2l3l4e");
+ 111   2            RI = 1;
+ 112   2            printf("Ended.");
+ 113   2        }
+ 114   1      
+ 115   1        // 6. Demonstrate you can report back to serial when you cancel flashing strings; i.e. when a new sequen
+C51 COMPILER V9.60.0.0   HW3                                                               11/12/2021 17:47:24 PAGE 3   
+
+             -ce is entered before flashing a new one is finished.
+ 116   1        // 7. Connect it all together, and demonstrate full functionality. i.e. demonstrate you can cancel flash
+             -ing of sequences and handle other test cases. 
+ 117   1        while(1){
+ 118   2          if(last_input != '\0' && last_input != '\n'){
+ 119   3            append_buffer(last_input);  
+ 120   3            last_input = '\0';  
+ 121   3          }
+ 122   2          
+ 123   2          if(fi < flash_buffer_size){
+ 124   3            flash_char(flash_buffer[fi]);
+ 125   3            fi++;
+ 126   3            
+ 127   3            if(fi == flash_buffer_size){
+ 128   4              RI = 1;
+ 129   4              printf("Ended.\n");
+ 130   4              fi = 0;
+ 131   4              flash_buffer_size = 0;
+ 132   4            }
+ 133   3          }
+ 134   2          
+ 135   2          if(last_input == '\n') {
+ 136   3            if(flash_buffer_size != 0 && fi != flash_buffer_size){
+ 137   4              RI = 1;
+ 138   4              printf("Cancelled.\n");
+ 139   4              fi = 0;
+ 140   4              flash_buffer_size = 0;    
+ 141   4            }else{
+ 142   4              for(fi = 0; fi < buffer_size; fi++){
+ 143   5                flash_buffer[fi] = buffer[fi];
+ 144   5              }   
+ 145   4                
+ 146   4              flash_buffer_size = buffer_size;
+ 147   4              buffer_size = 0;
+ 148   4              fi = 0;         
+ 149   4            }
+ 150   3            last_input = '\0';      
+ 151   3          }
+ 152   2        }
+ 153   1      }
+ 154          
+ 155          void flash_string(char* value){
+ 156   1        uint16_t i;
+ 157   1        
+ 158   1        for(i = 0; i < strlen(value); i++){
+ 159   2          flash_char(value[i]);
+ 160   2          delay(50);
+ 161   2        }
+ 162   1      } 
+ 163          
+ 164          
+ 165          void flash_long(){
+ 166   1        P1 = L;
+ 167   1        delay(20);
+ 168   1        P1 = 0;
+ 169   1        delay(20);
+ 170   1      }
+ 171          
+ 172          void flash_short(){
+ 173   1        P1 = S;
+ 174   1        delay(20);
+ 175   1        P1 = 0;
+C51 COMPILER V9.60.0.0   HW3                                                               11/12/2021 17:47:24 PAGE 4   
+
+ 176   1        delay(20);
+ 177   1      } 
+ 178          
+ 179          void flash_char(char value){
+ 180   1        uint16_t index;
+ 181   1        uint16_t i; 
+ 182   1        
+ 183   1        if(is_valid(value) == 0){
+ 184   2          return;
+ 185   2        }
+ 186   1        
+ 187   1        index = atoi(&value);
+ 188   1        
+ 189   1        for(i = 0 ; i < 4; i++){
+ 190   2          if(morse_lookup[index][i] == 'S'){
+ 191   3            flash_short();
+ 192   3          }
+ 193   2          else{
+ 194   3            flash_long();
+ 195   3          }
+ 196   2        }
+ 197   1        
+ 198   1      }
+ 199          
+ 200          void append_buffer(char value){
+ 201   1        uint16_t i; 
+ 202   1        
+ 203   1        if(is_valid(value) == 0){
+ 204   2          return;
+ 205   2        }
+ 206   1        
+ 207   1        if(buffer_size + 1 <= MAX_BUFFER_SIZE){
+ 208   2          buffer[buffer_size] = value;
+ 209   2          buffer_size++;
+ 210   2        }
+ 211   1        else{
+ 212   2          for(i = 0; i < MAX_BUFFER_SIZE - 1; i++){
+ 213   3            buffer[i] = buffer[i+1];
+ 214   3          }
+ 215   2          
+ 216   2          buffer[buffer_size - 1] = value;
+ 217   2        }
+ 218   1          
+ 219   1      }
+ 220          
+ 221          uint16_t is_valid(char value){
+ 222   1        if(value != '0' && value != '1' && value != '2' && value != '3' && value != '4' && value != '5' && value 
+             -!= '6' && value != '7' && value != '8' && value != '9'){
+ 223   2          return 0;
+ 224   2        }
+ 225   1        else{
+ 226   2          return 1;
+ 227   2        }
+ 228   1      }
+ 229          
+ 230          void delay(uint16_t max){
+ 231   1        uint16_t i;
+ 232   1        
+ 233   1        for(i = 0; i < max; i++){}
+ 234   1      }
+ 235          
+ 236          void set_timer_values(uint16_t delay){
+C51 COMPILER V9.60.0.0   HW3                                                               11/12/2021 17:47:24 PAGE 5   
+
+ 237   1        float value = 65536 - delay / STEP; // Should be greater than 0
+ 238   1        TL0_value = ((uint16_t)value & 0x00ff);
+ 239   1        TH0_value = ((uint16_t)value & 0xff00) >> 8;
+ 240   1      }
+ 241          
+ 242          // delay_time is in milliseconds
+ 243          void delay_with_timer(){
+ 244   1        TL0 = TL0_value;
+ 245   1        TH0 = TH0_value;
+ 246   1        TR0 = 1;
+ 247   1        while(TF0 == 0){};
+ 248   1        TR0 = 0;
+ 249   1        TF0 = 0;
+ 250   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    528    ----
+   CONSTANT SIZE    =     40    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     59      15
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

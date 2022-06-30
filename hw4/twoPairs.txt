@@ -1,0 +1,295 @@
+#include "mbed.h"
+#include "SimulatorBlockDevice.h"
+
+#define PAIR_COUNT 2
+
+#define PAIR_0_LED p5
+#define PAIR_0_BUTTON BUTTON1
+#define PAIR_1_LED p6
+#define PAIR_1_BUTTON p7
+
+#define ONE_CLAP 0.0
+#define TWO_CLAPS 0.1
+#define THREE_CLAPS 0.2
+#define FOUR_CLAPS 0.3
+#define FIVE_CLAPS 0.4
+#define SIX_CLAPS 0.5
+#define SEVEN_CLAPS 0.6
+#define EIGHT_CLAPS 0.7
+#define NINE_CLAPS 0.8
+#define TEN_CLAPS 0.9
+#define USE_CRITICAL_SECTION_LOCK 1   
+#define BUTTON_DEBOUNCE_TIME_MS 500
+#define BD_PAGE_SIZE 512
+
+struct ClockBuffer {
+    float brightness; // For "power-failures"
+    int timeStamp[10];
+    int index;
+};
+
+struct Pair{
+    ClockBuffer* clockBuffer;
+    int pairNo;
+    int buttonPressed;
+};
+
+SimulatorBlockDevice bd("myblockdevice", 128 * BD_PAGE_SIZE, BD_PAGE_SIZE);
+
+Pair pairs[PAIR_COUNT];
+Ticker ticker;
+
+Ticker tickers[PAIR_COUNT];
+InterruptIn buttons[PAIR_COUNT] = {PAIR_0_BUTTON, PAIR_1_BUTTON};
+PwmOut leds[PAIR_COUNT] = {PAIR_0_LED, PAIR_1_LED};
+
+int currentTime = 0;
+
+void enableButtonPair0();
+void buttonPair0Pressed();
+void enableButtonPair1();
+void buttonPair1Pressed();
+void tick();
+
+float getBrightness(ClockBuffer* cb);
+void init();
+int modifyArray(int mode, int value, ClockBuffer* cb);
+void setButtonPressed(int pairNo, int value);
+
+int main() {
+    int i;
+   
+    if (bd.init() != 0) {
+        printf("Blockdevice initialization failed!\n");
+        return 1;
+    }
+     
+    for(i = 0; i < PAIR_COUNT; i++){
+        pairs[i].clockBuffer = (ClockBuffer*)malloc(BD_PAGE_SIZE);
+    }
+    
+    // Writing weird stuff onto BD
+    float* weirdStuff = (float*)malloc(BD_PAGE_SIZE);
+    weirdStuff[0] = 35.865626352566252562312;
+    weirdStuff[2] = 35.865626352566252562312;
+    weirdStuff[4] = 35.865626352566252562312;
+    weirdStuff[15] = 35.865626352566252562312;
+    bd.program(weirdStuff, 0x0, BD_PAGE_SIZE);    
+    bd.program(weirdStuff, 0x0 + BD_PAGE_SIZE, BD_PAGE_SIZE);   
+    
+    for(i = 0; i < PAIR_COUNT; i++){
+        bd.read(pairs[i].clockBuffer, 0x0 + i*BD_PAGE_SIZE, BD_PAGE_SIZE);
+    }
+   
+    init();
+    
+    for(i = 0; i < PAIR_COUNT; i++){
+       leds[i] = pairs[i].clockBuffer->brightness;
+    }
+    
+    // Clock
+    ticker.attach(callback(&tick), 1.0);
+    
+    buttons[0].fall(callback(&buttonPair0Pressed));
+    buttons[1].fall(callback(&buttonPair1Pressed));
+    
+    printf("Starting...\n");
+    
+    
+    
+    while (1) {
+
+        for(i = 0; i < PAIR_COUNT; i++){
+            if(pairs[i].clockBuffer->index >= 0){
+                printf("button %d pushed at %d\n", i, modifyArray(1, -1, pairs[i].clockBuffer));
+            } 
+            
+            if(pairs[i].buttonPressed == 1){
+                leds[i] = getBrightness(pairs[i].clockBuffer);
+                setButtonPressed(i, 0);
+            }
+        }
+        
+        wait_ms(500);
+    }
+}
+
+void init(){
+    int isCorrupt;
+    int i;
+    int j;
+    int p;
+    int count; 
+    ClockBuffer* cb;
+    int lastButtonPush;
+    float brightness;
+    float difference;
+
+    for(p = 0; p < PAIR_COUNT; p++){
+        isCorrupt = 0;
+        cb = pairs[p].clockBuffer;
+        count = 0;
+        lastButtonPush = cb->timeStamp[0];
+        
+        // Check if index is valid
+        if(cb->index < -1 || cb->index > 9){
+            isCorrupt = 1;
+        }    
+        
+        if(isCorrupt != 1){
+            for(i = 0; i < 9 && isCorrupt != 1; i++){
+                if(cb->timeStamp[i] < 0 && cb->timeStamp[i] != -10){
+                    isCorrupt = 1;
+                }
+                
+                if(lastButtonPush - cb->timeStamp[i] < 5 && cb->timeStamp[i] != -10){
+                    count++;
+                }
+                
+                for(j = 0; j < i; j++)
+                {
+                    if(cb->timeStamp[j] < cb->timeStamp[i]){
+                        isCorrupt = 1;
+                        break;
+                    }
+                }
+            }
+        }        
+        
+        if(isCorrupt != 1){
+            if(count == 1){brightness = ONE_CLAP;}
+            else if(count == 2){brightness = TWO_CLAPS;}
+            else if(count == 3){brightness = THREE_CLAPS;}
+            else if(count == 4){brightness = FOUR_CLAPS;}
+            else if(count == 5){brightness = FIVE_CLAPS;}
+            else if(count == 6){brightness = SIX_CLAPS;}
+            else if(count == 7){brightness = SEVEN_CLAPS;}
+            else if(count == 8){brightness = EIGHT_CLAPS;}
+            else if(count == 9){brightness = NINE_CLAPS;}
+            else if(count == 10){brightness = TEN_CLAPS;}        
+        }
+        
+        difference = brightness - cb->brightness;
+        
+        if(difference > 0.05 || difference < -0.05){
+            isCorrupt = 1;
+        }
+        
+        if(isCorrupt == 1){
+            cb->brightness = 0.0;
+        }     
+        
+        cb->index = -1;
+        
+        for(i = 0; i < 10; i++){
+            cb->timeStamp[i] = -10;
+        }        
+    
+        pairs[p].pairNo = p;
+        pairs[p].buttonPressed = 0;
+    }
+    
+    
+}
+
+void enableButtonPair0(){
+    tickers[0].detach();
+    buttons[0].fall(callback(&buttonPair0Pressed));
+}
+
+void buttonPair0Pressed() {
+    CriticalSectionLock  lock;
+    buttons[0].fall(NULL);
+    modifyArray(0, currentTime, pairs[0].clockBuffer);
+    leds[0] = getBrightness(pairs[0].clockBuffer);
+    pairs[0].clockBuffer->brightness = leds[0];
+    bd.program(pairs[0].clockBuffer, 0x0, BD_PAGE_SIZE);
+    setButtonPressed(0, 1);
+    tickers[0].attach(callback(&enableButtonPair0), BUTTON_DEBOUNCE_TIME_MS / 1000.0);
+}
+
+void enableButtonPair1(){
+    tickers[1].detach();
+    buttons[1].fall(callback(&buttonPair1Pressed));
+}
+
+void buttonPair1Pressed() {
+    CriticalSectionLock  lock;
+    buttons[1].fall(NULL);
+    modifyArray(0, currentTime, pairs[1].clockBuffer);
+    leds[1] = getBrightness(pairs[1].clockBuffer);
+    pairs[1].clockBuffer->brightness = leds[1];
+    bd.program(pairs[1].clockBuffer, 0x0 + BD_PAGE_SIZE, BD_PAGE_SIZE);
+    setButtonPressed(1, 1);
+    tickers[1].attach(callback(&enableButtonPair1), BUTTON_DEBOUNCE_TIME_MS / 1000.0);
+}
+
+void setButtonPressed(int pairNo, int value){
+    #if (USE_CRITICAL_SECTION_LOCK == 1)
+        CriticalSectionLock  lock;
+    #endif
+
+    pairs[pairNo].buttonPressed = value;
+}
+
+
+
+void tick() {
+    currentTime++;
+}
+
+float getBrightness(ClockBuffer* cb){
+    int currTime = currentTime;
+    int i;
+    int count = 0;
+    float brightness;
+    
+    for(i = 0; i < 9; i++){
+        if(currTime - cb->timeStamp[i] < 5){
+            count++;
+        }
+    }
+    
+    if(count == 0){return 0.0;}
+    else if(count == 1){return ONE_CLAP;}
+    else if(count == 2){return TWO_CLAPS;}
+    else if(count == 3){return THREE_CLAPS;}
+    else if(count == 4){return FOUR_CLAPS;}
+    else if(count == 5){return FIVE_CLAPS;}
+    else if(count == 6){return SIX_CLAPS;}
+    else if(count == 7){return SEVEN_CLAPS;}
+    else if(count == 8){return EIGHT_CLAPS;}
+    else if(count == 9){return NINE_CLAPS;}
+    else if(count == 10){return TEN_CLAPS;}
+    
+    return -1;
+}
+
+// mode = 0 for push, 1 for pop
+int modifyArray(int mode, int value, ClockBuffer* cb){
+    #if (USE_CRITICAL_SECTION_LOCK == 1)
+        CriticalSectionLock  lock;
+    #endif
+    
+    if(mode == 0){
+        int i;
+        
+        for(i = 9; i > 0; i--){
+            cb->timeStamp[i] = cb->timeStamp[i-1];
+        }
+        
+        cb->timeStamp[0] = value;
+        
+        if(cb->index != 9){
+            cb->index++;
+        }
+    }
+    else{
+        int poppedValue = cb->timeStamp[cb->index];
+        cb->index--;
+        
+        return poppedValue;
+    }
+    
+    return -1;   
+}

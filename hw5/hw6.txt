@@ -1,0 +1,560 @@
+#include "mbed.h"
+#include "rtos.h"
+#include <string>
+
+using namespace std;
+
+string floatToString(float f);
+
+int cmd1(char* new_line_data);
+int cmd2(char* new_line_data);
+int cmd3(char* new_line_data);
+int cmd4(char* new_line_data);
+int cmd5(char* new_line_data);
+int cmd6(char* new_line_data);
+
+Semaphore sem_print_signal(1);
+Semaphore sem_print_data(1);
+
+Semaphore sem_5_seconds_signal(1);
+Semaphore sem_100_ms_signal(1);
+
+Semaphore sem_leds_data(1);
+Semaphore sem_new_line_signal(1);
+Semaphore sem_new_line_data(1);
+
+char* print_data;
+char *c = new char[1];
+
+char* received_data;
+char* new_line_data;
+int received_data_index = 0;
+
+Ticker ticker; // Clock
+Ticker ticker_LED; 
+int current_time = 0;
+
+static BufferedSerial pc(USBTX, USBRX); // tx, rx
+
+PwmOut led1(LED1);
+PwmOut led2(LED2);
+PwmOut led3(LED3);
+PwmOut led4(LED4);
+
+float b1 = 0.0;
+float b2 = 0.0;
+float b3 = 0.0;
+float b4 = 0.0;
+
+// Timer of the program. Counts seconds.
+void tick() {
+    current_time++;
+    
+    if(current_time % 5 == 0){
+        sem_5_seconds_signal.release();
+    }
+}
+
+// Signals the LED_controller_task every 100 ms.
+void tick_LED() {
+    sem_100_ms_signal.release();
+}
+
+void command_task() {
+    while (1) {
+        sem_new_line_signal.acquire();
+        sem_new_line_data.acquire();
+        
+        // Try commands one by one.
+        if(cmd1(new_line_data) == 1){
+            if(cmd2(new_line_data) == 1){
+                if(cmd3(new_line_data) == 1){
+                    if(cmd4(new_line_data) == 1){
+                        if(cmd5(new_line_data) == 1){
+                            if(cmd6(new_line_data) == 1){
+                            };
+                        };
+                    };
+                };
+            };
+        };
+        
+        sem_new_line_data.release();
+    }
+}
+
+void serial_receiver_task() {
+    while (1) {
+        pc.read(c, sizeof(c));
+        pc.write(c, sizeof(c));
+        
+        if(*c == '\n'){
+            received_data[received_data_index] = '\0';
+             
+            sem_print_data.acquire();
+             
+            for(int i = 0; i <= received_data_index; i++){
+                print_data[i] = received_data[i];
+            }
+            
+            sem_new_line_data.acquire();
+            
+            for(int i = 0; i <= received_data_index; i++){
+                new_line_data[i] = received_data[i];
+            }
+            
+            sem_new_line_data.release();
+            
+            sem_print_data.release();
+            sem_print_signal.release();    
+            sem_new_line_signal.release();       
+             
+            received_data_index = 0;
+        }
+        else{
+            received_data[received_data_index] = *c;
+            received_data_index++;  
+        }
+    }
+}
+
+void heartbeat_task() {
+    string text = "Alive for: ";
+    int i = 0;
+    int j = 0;
+    int ct;
+    int d;
+    int tmp;
+    
+    while (1) {
+        sem_5_seconds_signal.acquire();  
+        
+        ct = current_time;
+        if(ct){
+            sem_print_data.acquire();
+            
+            for(i = 0; i < text.size(); i++){
+                print_data[i] = text[i];
+            }
+            
+            const int CT = ct;
+            
+            d = 1000;
+            
+            while(d > 0){
+                tmp = ct / d;
+                
+                if(tmp == 1){print_data[i++] = '1';}
+                else if(tmp == 2){print_data[i++] = '2';}
+                else if(tmp == 3){print_data[i++] = '3';}
+                else if(tmp == 4){print_data[i++] = '4';}
+                else if(tmp == 5){print_data[i++] = '5';}
+                else if(tmp == 6){print_data[i++] = '6';}
+                else if(tmp == 7){print_data[i++] = '7';}
+                else if(tmp == 8){print_data[i++] = '8';}
+                else if(tmp == 9){print_data[i++] = '9';}
+                else if(tmp == 0 && CT >= d){print_data[i++] = '0';}
+                
+                ct = ct % d;
+                d = d / 10;
+            }
+        
+            
+            print_data[i] = '\0';
+            
+            sem_print_data.release();
+            sem_print_signal.release();         
+        }
+        
+
+        
+    }
+}
+
+void LED_controller_task() {
+    while (1) {
+        sem_100_ms_signal.acquire();  
+        sem_leds_data.acquire();
+        led1 = b1;
+        led2 = b2;
+        led3 = b3;
+        led4 = b4;  
+        sem_leds_data.release();
+        
+    }
+}
+
+void printf_task() {
+    while (1) {
+        sem_print_signal.acquire();
+        sem_print_data.acquire();
+        
+        printf(print_data);
+        printf("\n");
+        
+        sem_print_data.release();
+    }
+}
+
+int main(){
+    ticker.attach(callback(&tick), 1.0); // Clock
+    ticker_LED.attach(callback(&tick_LED), 0.1); 
+        
+    pc.set_blocking(true);
+
+    print_data = (char*)malloc(100);
+    received_data = (char*)malloc(100);
+    new_line_data = (char*)malloc(100);
+    
+    Thread t1;
+    t1.start(mbed::callback(printf_task));
+    
+    Thread t2;
+    t2.start(mbed::callback(heartbeat_task));
+    
+    Thread t3;
+    t3.start(mbed::callback(serial_receiver_task));
+    
+    Thread t4;
+    t4.start(mbed::callback(LED_controller_task));
+    
+    Thread t5;
+    t5.start(mbed::callback(command_task));
+        
+    t1.set_priority(osPriorityNormal);
+    t2.set_priority(osPriorityLow);
+    t3.set_priority(osPriorityLow1);
+    t4.set_priority(osPriorityHigh);
+    t4.set_priority(osPriorityLow2);
+    
+    rtos::ThisThread::sleep_for(osWaitForever);
+}
+
+// Helper function to convert floats between 0.0-1.0 to string.
+string floatToString(float f){
+    string s = "";
+    int value = f * 100;
+    int divider = 100;
+    int result;
+    
+    for(int i = 0; i < 4; i++){
+        if(i == 1){s = s + '.';}
+        else{
+            result = (int) (value / divider);
+            
+            if(result == 0){s = s + '0';}
+            else if(result == 1){s = s + '1';}
+            else if(result == 2){s = s + '2';}
+            else if(result == 3){s = s + '3';}
+            else if(result == 4){s = s + '4';}
+            else if(result == 5){s = s + '5';}
+            else if(result == 6){s = s + '6';}
+            else if(result == 7){s = s + '7';}
+            else if(result == 8){s = s + '8';}
+            else if(result == 9){s = s + '9';}
+            
+            value = value % divider;
+            divider = divider / 10;
+        }
+    }
+    
+    return s;
+}
+
+// Functions below are for commands. They return 1 if the parameter is not the corresponding command, 0 otherwise.
+int cmd1(char* new_line_data){
+    // set led $lednum:int $brightness:float
+    string cmd1 = "set led ";
+    int i = 0;
+    int i1;
+    float f1 = 0.0;
+    string s1 = "";
+        
+    for(i = 0; i < cmd1.size(); i++){
+        if(new_line_data[i] != cmd1[i]){return 1;}
+    }
+         
+    if(new_line_data[i] == '1'){i1 = 1;}
+    else if(new_line_data[i] == '2'){i1 = 2;}
+    else if(new_line_data[i] == '3'){i1 = 3;}
+    else if(new_line_data[i] == '4'){i1 = 4;}
+    else {return 1;}
+    
+    i++;
+    if(new_line_data[i] != ' '){return 1;}
+    i++;
+    
+    if(new_line_data[i] == '0' && new_line_data[i + 1] == '.' && new_line_data[i + 3] == '\0'){i = i + 2;}
+    else if(new_line_data[i] == '1' && 
+            new_line_data[i + 1] == '.' && 
+            new_line_data[i+2] == '0' && 
+            new_line_data[i+3] == '\0'){f1 = 1.0;}
+    
+    if(f1 != 1.0){
+        if(new_line_data[i] == '0'){f1 = 0.0;}
+        else if(new_line_data[i] == '1'){f1 = 0.1;}
+        else if(new_line_data[i] == '2'){f1 = 0.2;}
+        else if(new_line_data[i] == '3'){f1 = 0.3;}
+        else if(new_line_data[i] == '4'){f1 = 0.4;}
+        else if(new_line_data[i] == '5'){f1 = 0.5;}
+        else if(new_line_data[i] == '6'){f1 = 0.6;}
+        else if(new_line_data[i] == '7'){f1 = 0.7;}
+        else if(new_line_data[i] == '8'){f1 = 0.8;}
+        else if(new_line_data[i] == '9'){f1 = 0.9;}
+        else{return 1;}
+    }
+    
+    sem_leds_data.acquire();
+    if(i1 == 1){b1 = f1;}
+    else if(i1 == 2){b2 = f1;}
+    else if(i1 == 3){b3 = f1;}
+    else{b4 = f1;}
+    sem_leds_data.release();
+    
+    return 0; 
+}
+
+int cmd2(char* new_line_data){
+    // get led $lednum:int
+    string cmd2 = "get led ";
+    int i = 0;
+    int i1;
+    string b;
+    string text = "";
+    
+    for(i = 0; i < cmd2.size(); i++){
+        if(new_line_data[i] != cmd2[i]){return 1;}
+    }
+         
+    if(new_line_data[i] == '1'){i1 = 1;}
+    else if(new_line_data[i] == '2'){i1 = 2;}
+    else if(new_line_data[i] == '3'){i1 = 3;}
+    else if(new_line_data[i] == '4'){i1 = 4;}
+    else {return 1;}
+    
+    if(new_line_data[i+1] != '\0'){return 1;}
+  
+    sem_leds_data.acquire();
+
+    if(i1 == 1){text = "Brightness of led 1 is " + floatToString(b1);}
+    else if(i1 == 2){text = "Brightness of led 2 is " + floatToString(b2);}
+    else if(i1 == 3){text = "Brightness of led 3 is " + floatToString(b3);}
+    else{text = "Brightness of led 4 is " + floatToString(b4);}
+    sem_leds_data.release();
+ 
+    text = text + '\0';
+    sem_print_data.acquire();
+    
+    for(int i = 0; i < text.size(); i++){
+        print_data[i] = text[i];
+    }
+    
+    sem_print_data.release();
+    sem_print_signal.release(); 
+    
+    return 0; 
+}
+
+int cmd3(char* new_line_data){
+    // forward $pow:float
+    string cmd3 = "forward ";
+    int i = 0;
+    float f1 = 0.0;
+    string text = "Forward command executed";
+        
+    for(i = 0; i < cmd3.size(); i++){
+        if(new_line_data[i] != cmd3[i]){return 1;}
+    }
+    
+    if(new_line_data[i] == '0' && new_line_data[i + 1] == '.' && new_line_data[i + 3] == '\0'){i = i + 2;}
+    else if(new_line_data[i] == '1' && 
+            new_line_data[i + 1] == '.' && 
+            new_line_data[i+2] == '0' && 
+            new_line_data[i+3] == '\0'){f1 = 1.0;}
+    
+    if(f1 != 1.0){
+        if(new_line_data[i] == '0'){f1 = 0.0;}
+        else if(new_line_data[i] == '1'){f1 = 0.1;}
+        else if(new_line_data[i] == '2'){f1 = 0.2;}
+        else if(new_line_data[i] == '3'){f1 = 0.3;}
+        else if(new_line_data[i] == '4'){f1 = 0.4;}
+        else if(new_line_data[i] == '5'){f1 = 0.5;}
+        else if(new_line_data[i] == '6'){f1 = 0.6;}
+        else if(new_line_data[i] == '7'){f1 = 0.7;}
+        else if(new_line_data[i] == '8'){f1 = 0.8;}
+        else if(new_line_data[i] == '9'){f1 = 0.9;}
+        else{return 1;}
+    }
+    
+    sem_leds_data.acquire();
+    b1 = f1;
+    b3 = f1;
+    b2 = 0;
+    b4 = 0;
+    sem_leds_data.release();
+    
+    text = text + '\0';
+    sem_print_data.acquire();
+    
+    for(int i = 0; i < text.size(); i++){
+        print_data[i] = text[i];
+    }
+    
+    sem_print_data.release();
+    sem_print_signal.release(); 
+    
+    return 0; 
+}
+
+int cmd4(char* new_line_data){
+    // backward $pow:float
+    string cmd4 = "backward ";
+    int i = 0;
+    float f1 = 0.0;
+    string text = "Backward command executed";
+        
+    for(i = 0; i < cmd4.size(); i++){
+        if(new_line_data[i] != cmd4[i]){return 1;}
+    }
+    
+    if(new_line_data[i] == '0' && new_line_data[i + 1] == '.' && new_line_data[i + 3] == '\0'){i = i + 2;}
+    else if(new_line_data[i] == '1' && 
+            new_line_data[i + 1] == '.' && 
+            new_line_data[i+2] == '0' && 
+            new_line_data[i+3] == '\0'){f1 = 1.0;}
+    
+    if(f1 != 1.0){
+        if(new_line_data[i] == '0'){f1 = 0.0;}
+        else if(new_line_data[i] == '1'){f1 = 0.1;}
+        else if(new_line_data[i] == '2'){f1 = 0.2;}
+        else if(new_line_data[i] == '3'){f1 = 0.3;}
+        else if(new_line_data[i] == '4'){f1 = 0.4;}
+        else if(new_line_data[i] == '5'){f1 = 0.5;}
+        else if(new_line_data[i] == '6'){f1 = 0.6;}
+        else if(new_line_data[i] == '7'){f1 = 0.7;}
+        else if(new_line_data[i] == '8'){f1 = 0.8;}
+        else if(new_line_data[i] == '9'){f1 = 0.9;}
+        else{return 1;}
+    }
+    
+    sem_leds_data.acquire();
+    b2 = f1;
+    b4 = f1;
+    b1 = 0;
+    b3 = 0;
+    sem_leds_data.release();
+    
+    text = text + '\0';
+    sem_print_data.acquire();
+    
+    for(int i = 0; i < text.size(); i++){
+        print_data[i] = text[i];
+    }
+    
+    sem_print_data.release();
+    sem_print_signal.release(); 
+    
+    return 0; 
+}
+
+int cmd5(char* new_line_data){
+    // left $pow:float
+    string cmd5 = "left ";
+    int i = 0;
+    float f1 = 0.0;
+    string text = "Left command executed";
+        
+    for(i = 0; i < cmd5.size(); i++){
+        if(new_line_data[i] != cmd5[i]){return 1;}
+    }
+    
+    if(new_line_data[i] == '0' && new_line_data[i + 1] == '.' && new_line_data[i + 3] == '\0'){i = i + 2;}
+    else if(new_line_data[i] == '1' && 
+            new_line_data[i + 1] == '.' && 
+            new_line_data[i+2] == '0' && 
+            new_line_data[i+3] == '\0'){f1 = 1.0;}
+    
+    if(f1 != 1.0){
+        if(new_line_data[i] == '0'){f1 = 0.0;}
+        else if(new_line_data[i] == '1'){f1 = 0.1;}
+        else if(new_line_data[i] == '2'){f1 = 0.2;}
+        else if(new_line_data[i] == '3'){f1 = 0.3;}
+        else if(new_line_data[i] == '4'){f1 = 0.4;}
+        else if(new_line_data[i] == '5'){f1 = 0.5;}
+        else if(new_line_data[i] == '6'){f1 = 0.6;}
+        else if(new_line_data[i] == '7'){f1 = 0.7;}
+        else if(new_line_data[i] == '8'){f1 = 0.8;}
+        else if(new_line_data[i] == '9'){f1 = 0.9;}
+        else{return 1;}
+    }
+    
+    sem_leds_data.acquire();
+    b1 = f1;
+    b3 = f1*0.5;
+    b2 = 0.0;
+    b4 = 0.0;
+    sem_leds_data.release();
+    
+    text = text + '\0';
+    sem_print_data.acquire();
+    
+    for(int i = 0; i < text.size(); i++){
+        print_data[i] = text[i];
+    }
+    
+    sem_print_data.release();
+    sem_print_signal.release(); 
+    
+    return 0; 
+}
+
+int cmd6(char* new_line_data){
+    // right $pow:float
+    string cmd6 = "right ";
+    int i = 0;
+    float f1 = 0.0;
+    string text = "Right command executed";
+        
+    for(i = 0; i < cmd6.size(); i++){
+        if(new_line_data[i] != cmd6[i]){return 1;}
+    }
+    
+    if(new_line_data[i] == '0' && new_line_data[i + 1] == '.' && new_line_data[i + 3] == '\0'){i = i + 2;}
+    else if(new_line_data[i] == '1' && 
+            new_line_data[i + 1] == '.' && 
+            new_line_data[i+2] == '0' && 
+            new_line_data[i+3] == '\0'){f1 = 1.0;}
+    
+    if(f1 != 1.0){
+        if(new_line_data[i] == '0'){f1 = 0.0;}
+        else if(new_line_data[i] == '1'){f1 = 0.1;}
+        else if(new_line_data[i] == '2'){f1 = 0.2;}
+        else if(new_line_data[i] == '3'){f1 = 0.3;}
+        else if(new_line_data[i] == '4'){f1 = 0.4;}
+        else if(new_line_data[i] == '5'){f1 = 0.5;}
+        else if(new_line_data[i] == '6'){f1 = 0.6;}
+        else if(new_line_data[i] == '7'){f1 = 0.7;}
+        else if(new_line_data[i] == '8'){f1 = 0.8;}
+        else if(new_line_data[i] == '9'){f1 = 0.9;}
+        else{return 1;}
+    }
+    
+    sem_leds_data.acquire();
+    b2 = f1;
+    b4 = f1*0.5;
+    b1 = 0.0;
+    b3 = 0.0;
+    sem_leds_data.release();
+    
+    text = text + '\0';
+    sem_print_data.acquire();
+    
+    for(int i = 0; i < text.size(); i++){
+        print_data[i] = text[i];
+    }
+    
+    sem_print_data.release();
+    sem_print_signal.release(); 
+    
+    return 0; 
+}

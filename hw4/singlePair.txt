@@ -1,0 +1,214 @@
+#include "mbed.h"
+#include "SimulatorBlockDevice.h"
+
+#define ONE_CLAP 0.0
+#define TWO_CLAPS 0.1
+#define THREE_CLAPS 0.2
+#define FOUR_CLAPS 0.3
+#define FIVE_CLAPS 0.4
+#define SIX_CLAPS 0.5
+#define SEVEN_CLAPS 0.6
+#define EIGHT_CLAPS 0.7
+#define NINE_CLAPS 0.8
+#define TEN_CLAPS 0.9
+#define USE_CRITICAL_SECTION_LOCK 1   
+#define BUTTON_DEBOUNCE_TIME_MS 500
+#define BD_PAGE_SIZE 512
+
+struct ClockBuffer {
+    float brightness; // For "power-failures"
+    int timeStamp[10];
+    int index;
+};
+
+SimulatorBlockDevice bd("myblockdevice", 128 * BD_PAGE_SIZE, BD_PAGE_SIZE);
+
+Ticker ticker; // Clock
+Ticker tickerBouncing; // To solve button bouncing
+PwmOut led(p5);
+InterruptIn button(BUTTON1);
+
+int currentTime = 0;
+ClockBuffer* cb;
+
+void enableButton();
+void buttonPressed();
+void tick();
+
+float getBrightness(ClockBuffer* cb);
+void initTS();
+int modifyArray(int mode, int value);
+
+int main() {
+    if (bd.init() != 0) {
+        printf("Blockdevice initialization failed!\n");
+        return 1;
+    }
+    
+    cb = (ClockBuffer*)malloc(BD_PAGE_SIZE);
+    
+    // Writing weird stuff onto BD
+    //float* weirdStuff = (float*)malloc(BD_PAGE_SIZE);
+    //weirdStuff[0] = 35.865626352566252562312;
+    //weirdStuff[2] = 35.865626352566252562312;
+    //weirdStuff[4] = 35.865626352566252562312;
+    //weirdStuff[15] = 35.865626352566252562312;
+    //bd.program(weirdStuff, 0x0, BD_PAGE_SIZE);
+     
+    bd.read(cb, 0x0, BD_PAGE_SIZE);
+    initTS();
+    led = cb->brightness;
+    
+    
+    ticker.attach(callback(&tick), 1.0);
+    button.fall(callback(&buttonPressed));
+    
+    printf("Starting...\n");
+     
+    while (1) {
+        if(cb->index >= 0){
+            printf("%d\n", modifyArray(1, -1));
+        }
+        wait_ms(500);
+    }
+}
+
+void initTS(){
+    int isCorrupt = 0;
+    int i;
+    int j;
+    int count = 0; 
+    int lastButtonPush = cb->timeStamp[0];
+    float brightness;
+    float difference;
+
+    // Check if index is valid
+    if(cb->index < -1 || cb->index > 9){
+        isCorrupt = 1;
+    }
+    
+    
+    if(isCorrupt != 1){
+        for(i = 0; i < 9 && isCorrupt != 1; i++){
+            if(cb->timeStamp[i] < 0 && cb->timeStamp[i] != -10){
+                isCorrupt = 1;
+            }
+            
+            if(lastButtonPush - cb->timeStamp[i] < 5 && cb->timeStamp[i] != -10){
+                count++;
+            }
+            
+            for(j = 0; j < i; j++)
+            {
+                if(cb->timeStamp[j] < cb->timeStamp[i]){
+                    isCorrupt = 1;
+                    break;
+                }
+            }
+        }
+    }
+    
+    if(isCorrupt != 1){
+        if(count == 1){brightness = ONE_CLAP;}
+        else if(count == 2){brightness = TWO_CLAPS;}
+        else if(count == 3){brightness = THREE_CLAPS;}
+        else if(count == 4){brightness = FOUR_CLAPS;}
+        else if(count == 5){brightness = FIVE_CLAPS;}
+        else if(count == 6){brightness = SIX_CLAPS;}
+        else if(count == 7){brightness = SEVEN_CLAPS;}
+        else if(count == 8){brightness = EIGHT_CLAPS;}
+        else if(count == 9){brightness = NINE_CLAPS;}
+        else if(count == 10){brightness = TEN_CLAPS;}        
+    }
+    
+    difference = brightness - cb->brightness;
+    
+    if(difference > 0.05 || difference < -0.05){
+        isCorrupt = 1;
+    }
+    
+    if(isCorrupt == 1){
+        cb->brightness = 0.0;
+    }
+    
+    cb->index = -1;
+    
+    for(i = 0; i < 10; i++){
+        cb->timeStamp[i] = -10;
+    }
+}
+
+float getBrightness(ClockBuffer* cb){
+    int currTime = currentTime;
+    int i;
+    int count = 0;
+    float brightness;
+    
+    for(i = 0; i < 9; i++){
+        if(currTime - cb->timeStamp[i] < 5){
+            count++;
+        }
+    }
+    
+    if(count == 0){return 0.0;}
+    else if(count == 1){return ONE_CLAP;}
+    else if(count == 2){return TWO_CLAPS;}
+    else if(count == 3){return THREE_CLAPS;}
+    else if(count == 4){return FOUR_CLAPS;}
+    else if(count == 5){return FIVE_CLAPS;}
+    else if(count == 6){return SIX_CLAPS;}
+    else if(count == 7){return SEVEN_CLAPS;}
+    else if(count == 8){return EIGHT_CLAPS;}
+    else if(count == 9){return NINE_CLAPS;}
+    else if(count == 10){return TEN_CLAPS;}
+    
+    return -1;
+}
+
+void enableButton(){
+    tickerBouncing.detach();
+    button.fall(callback(&buttonPressed));
+}
+
+void buttonPressed() {
+    CriticalSectionLock  lock;
+    button.fall(NULL);
+    modifyArray(0, currentTime);
+    led = getBrightness(cb);
+    cb->brightness = led;
+    bd.program(cb, 0x0, BD_PAGE_SIZE);
+    tickerBouncing.attach(callback(&enableButton), BUTTON_DEBOUNCE_TIME_MS / 1000.0);
+}
+
+// mode = 0 for push, 1 for pop
+int modifyArray(int mode, int value){
+    #if (USE_CRITICAL_SECTION_LOCK == 1)
+        CriticalSectionLock  lock;
+    #endif
+    
+    if(mode == 0){
+        int i;
+        
+        for(i = 9; i > 0; i--){
+            cb->timeStamp[i] = cb->timeStamp[i-1];
+        }
+        
+        cb->timeStamp[0] = value;
+        
+        if(cb->index != 9){
+            cb->index++;
+        }
+    }
+    else{
+        int poppedValue = cb->timeStamp[cb->index];
+        cb->index--;
+        
+        return poppedValue;
+    }
+    
+    return -1;
+}
+
+void tick() {
+    currentTime++;
+}

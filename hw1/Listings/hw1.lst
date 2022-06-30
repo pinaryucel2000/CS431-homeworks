@@ -1,0 +1,210 @@
+C51 COMPILER V9.60.0.0   HW1                                                               10/08/2021 16:55:56 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE HW1
+OBJECT MODULE PLACED IN .\Objects\hw1.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE hw1.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listings\hw1.l
+                    -st) TABS(2) OBJECT(.\Objects\hw1.obj)
+
+line level    source
+
+   1          #include <REG51.H>
+   2          #include <inttypes.h>
+   3          
+   4          #define MAX_SIZE 4
+   5          
+   6          struct Array {
+   7            int8_t array[MAX_SIZE];
+   8            int8_t currentSize;
+   9            int8_t leftIndex;
+  10            int8_t rightIndex;
+  11          };
+  12          
+  13          struct Array Array;
+  14          
+  15          int8_t append_left(int8_t newValue){
+  16   1        int8_t i;
+  17   1        
+  18   1        if(Array.currentSize == MAX_SIZE){
+  19   2          return -1;
+  20   2        }
+  21   1        else if(Array.leftIndex == 0){
+  22   2          
+  23   2          for(i = Array.currentSize; i > 0; i--){
+  24   3              Array.array[i] = Array.array[i-1];
+  25   3          }
+  26   2          
+  27   2          Array.array[0] = newValue;
+  28   2          Array.rightIndex =  Array.rightIndex + 1;
+  29   2        }
+  30   1        else if(Array.leftIndex == -1){
+  31   2          Array.leftIndex = 0;
+  32   2          Array.rightIndex = 0;
+  33   2          Array.array[0] = newValue;  
+  34   2        }
+  35   1        else{
+  36   2          Array.leftIndex = Array.leftIndex - 1;
+  37   2          Array.array[Array.leftIndex] = newValue;
+  38   2        }
+  39   1        
+  40   1        Array.currentSize = Array.currentSize + 1;
+  41   1        return Array.currentSize;
+  42   1      }
+  43          
+  44          int8_t append_right(int8_t newValue){
+  45   1        int8_t i;
+  46   1        
+  47   1        if(Array.currentSize == MAX_SIZE){
+  48   2          return -1;
+  49   2        }
+  50   1        else if(Array.rightIndex == MAX_SIZE - 1){
+  51   2          
+  52   2          for(i = Array.leftIndex - 1; i < MAX_SIZE - 1; i++){
+  53   3              Array.array[i] = Array.array[i+1];
+  54   3          }
+C51 COMPILER V9.60.0.0   HW1                                                               10/08/2021 16:55:56 PAGE 2   
+
+  55   2          
+  56   2          Array.array[MAX_SIZE - 1] = newValue;
+  57   2          Array.leftIndex =   Array.leftIndex - 1;
+  58   2        }
+  59   1        else if(Array.rightIndex == -1){
+  60   2          Array.leftIndex = 0;
+  61   2          Array.rightIndex = 0;
+  62   2          Array.array[0] = newValue;  
+  63   2        }
+  64   1        else{
+  65   2          Array.rightIndex = Array.rightIndex + 1;
+  66   2          Array.array[Array.rightIndex] = newValue;
+  67   2        }
+  68   1        
+  69   1        Array.currentSize = Array.currentSize + 1;
+  70   1        return Array.currentSize;
+  71   1      }
+  72          
+  73          int8_t pop_left(int8_t* currentSize){
+  74   1        int8_t value;
+  75   1        
+  76   1        if(Array.currentSize == 0){
+  77   2          *currentSize = 0;
+  78   2          return -1;
+  79   2        } 
+  80   1        
+  81   1        value = Array.array[Array.leftIndex];
+  82   1        
+  83   1        if(Array.currentSize == 1){
+  84   2          *currentSize = 0;
+  85   2          Array.leftIndex = -1;
+  86   2          Array.rightIndex = -1;
+  87   2          Array.currentSize = 0;
+  88   2        } 
+  89   1        else{
+  90   2          Array.leftIndex = Array.leftIndex + 1;
+  91   2          Array.currentSize = Array.currentSize - 1;
+  92   2          *currentSize = Array.currentSize;
+  93   2        }
+  94   1        
+  95   1        return value;
+  96   1      }
+  97          
+  98          int8_t  pop_right(int8_t* currentSize){
+  99   1        int8_t value;
+ 100   1        
+ 101   1        if(Array.currentSize == 0){
+ 102   2          *currentSize = 0;
+ 103   2          return -1;
+ 104   2        } 
+ 105   1        
+ 106   1        value = Array.array[Array.rightIndex];
+ 107   1        
+ 108   1        if(Array.currentSize == 1){
+ 109   2          *currentSize = 0;
+ 110   2          Array.leftIndex = -1;
+ 111   2          Array.rightIndex = -1;
+ 112   2          Array.currentSize = 0;
+ 113   2        } 
+ 114   1        else{
+ 115   2          Array.rightIndex = Array.rightIndex - 1;
+ 116   2          Array.currentSize = Array.currentSize - 1;
+C51 COMPILER V9.60.0.0   HW1                                                               10/08/2021 16:55:56 PAGE 3   
+
+ 117   2          *currentSize = Array.currentSize;
+ 118   2        }
+ 119   1        
+ 120   1        return value;
+ 121   1      }
+ 122          
+ 123          int8_t seek_left(int8_t* currentSize){
+ 124   1        *currentSize = Array.currentSize;
+ 125   1        
+ 126   1        if(Array.currentSize != 0){
+ 127   2          return Array.array[Array.leftIndex];
+ 128   2        }
+ 129   1        else{
+ 130   2          return -1;
+ 131   2        }
+ 132   1      }
+ 133          
+ 134          int8_t seek_right(int8_t* currentSize){
+ 135   1        *currentSize = Array.currentSize;
+ 136   1        
+ 137   1        if(Array.currentSize != 0){
+ 138   2          return Array.array[Array.rightIndex];
+ 139   2        }
+ 140   1        else{
+ 141   2          return -1;
+ 142   2        }
+ 143   1      }
+ 144          
+ 145          int8_t length(){
+ 146   1        return Array.currentSize;
+ 147   1      }
+ 148          
+ 149          void main (void)  {
+ 150   1        int8_t result = 0xAA; // for easy detection in the RAM
+ 151   1        int8_t parameter = 0xBB; // for easy detection in the RAM
+ 152   1        Array.leftIndex = -1;
+ 153   1        Array.rightIndex = -1;
+ 154   1        Array.currentSize = 0;
+ 155   1        
+ 156   1        while (1) { /* Loop forever */
+ 157   2          if(Array.currentSize <= MAX_SIZE)
+ 158   2          {
+ 159   3            result = append_left(0xCC);
+ 160   3            result = append_right(0xDD);
+ 161   3            result = seek_right(&parameter);
+ 162   3            result = append_left(0xEE);
+ 163   3            result = append_right(0xFF);
+ 164   3            result = append_left(0x11);
+ 165   3            result = seek_left(&parameter);
+ 166   3            result = length();
+ 167   3            
+ 168   3            result = pop_left(&parameter);
+ 169   3            result = pop_right(&parameter);
+ 170   3            result = pop_left(&parameter);
+ 171   3            result = pop_right(&parameter);
+ 172   3            result = pop_left(&parameter);
+ 173   3            
+ 174   3            result = seek_right(&parameter);
+ 175   3            result = seek_left(&parameter);
+ 176   3          }
+ 177   2          
+ 178   2      
+C51 COMPILER V9.60.0.0   HW1                                                               10/08/2021 16:55:56 PAGE 4   
+
+ 179   2        }
+ 180   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    463    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

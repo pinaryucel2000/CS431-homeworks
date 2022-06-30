@@ -1,0 +1,839 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    11/10/2021  23:20:43  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\hw3.obj TO .\Objects\hw2 PRINT (.\Listings\hw2.m51)
+
+
+MEMORY MODEL: SMALL WITH FLOATING POINT ARITHMETIC
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\hw3.obj (HW3)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPADD)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPDIV)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FCAST)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?CASTF)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (PRINTF)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPGETOPN)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPROUND)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPCONVERT)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPMUL)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FTNPWR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CSTPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?LNEG)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CCASE)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (PUTCHAR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (_GETKEY)
+
+
+LINK MAP OF MODULE:  .\Objects\hw2 (HW3)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0005H     UNIT         ?DT?_LCD8_WRITE_STRING?HW3
+            DATA    000DH     0005H     UNIT         ?DT?_LCD4_WRITE_STRING?HW3
+            DATA    0012H     0004H     UNIT         ?DT?_LCD4_SET_CURSOR?HW3
+            DATA    0016H     0004H     UNIT         ?DT?HW3
+            DATA    001AH     0001H     UNIT         ?DT?_LCD8_SET_CURSOR?HW3
+                    001BH     0005H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
+                    0021H.1   0000H.7                *** GAP ***
+            DATA    0022H     0023H     UNIT         _DATA_GROUP_
+            IDATA   0045H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     059BH     UNIT         ?C?LIB_CODE
+            CODE    0D9BH     046FH     UNIT         ?PR?PRINTF?PRINTF
+            CODE    120AH     0050H     UNIT         ?PR?_LCD8_PORT?HW3
+            CODE    125AH     004AH     UNIT         ?PR?_LCD4_SET_CURSOR?HW3
+            CODE    12A4H     003CH     UNIT         ?PR?_SET_TIMER_VALUES?HW3
+            CODE    12E0H     0037H     UNIT         ?PR?LCD4_INIT?HW3
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 2
+
+
+            CODE    1317H     0033H     UNIT         ?PR?MAIN?HW3
+            CODE    134AH     002FH     UNIT         ?PR?_LCD_DELAY?HW3
+            CODE    1379H     002BH     UNIT         ?PR?_LCD8_WRITE_STRING?HW3
+            CODE    13A4H     002BH     UNIT         ?PR?_LCD4_WRITE_CHAR?HW3
+            CODE    13CFH     002BH     UNIT         ?PR?_LCD4_WRITE_STRING?HW3
+            CODE    13FAH     002AH     UNIT         ?PR?LCD8_INIT?HW3
+            CODE    1424H     0029H     UNIT         ?PR?_LCD8_SET_CURSOR?HW3
+            CODE    144DH     0028H     UNIT         ?PR?_LCD4_PORT?HW3
+            CODE    1475H     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    149CH     0024H     UNIT         ?CO?HW3
+            CODE    14C0H     0012H     UNIT         ?PR?_LCD4_CMD?HW3
+            CODE    14D2H     0010H     UNIT         ?PR?DELAY?HW3
+            CODE    14E2H     000FH     UNIT         ?PR?_LCD8_CMD?HW3
+            CODE    14F1H     000CH     UNIT         ?C_C51STARTUP
+            CODE    14FDH     000AH     UNIT         ?PR?LCD4_CLEAR?HW3
+            CODE    1507H     000AH     UNIT         ?PR?LCD4_SHIFT_RIGHT?HW3
+            CODE    1511H     000AH     UNIT         ?PR?LCD4_SHIFT_LEFT?HW3
+            CODE    151BH     000AH     UNIT         ?PR?_GETKEY?_GETKEY
+            CODE    1525H     0008H     UNIT         ?PR?_LCD8_WRITE_CHAR?HW3
+            CODE    152DH     0005H     UNIT         ?PR?LCD8_CLEAR?HW3
+            CODE    1532H     0005H     UNIT         ?PR?LCD8_SHIFT_RIGHT?HW3
+            CODE    1537H     0005H     UNIT         ?PR?LCD8_SHIFT_LEFT?HW3
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\hw2 (HW3)
+
+
+SEGMENT                               BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT              START    LENGTH     START    LENGTH
+----------------------------------------------------------------------
+?C_C51STARTUP                      -----    -----      -----    -----
+  +--> ?PR?MAIN?HW3
+
+?PR?MAIN?HW3                       -----    -----      0022H    0007H
+  +--> ?PR?_SET_TIMER_VALUES?HW3
+  +--> ?CO?HW3
+  +--> ?PR?PRINTF?PRINTF
+  +--> ?PR?_GETKEY?_GETKEY
+  +--> ?PR?DELAY?HW3
+
+?PR?_SET_TIMER_VALUES?HW3          -----    -----      0029H    0004H
+
+?PR?PRINTF?PRINTF                  0020H.0  0001H.1    0029H    001CH
+  +--> ?PR?PUTCHAR?PUTCHAR
+
+
+
+UNRESOLVED EXTERNAL SYMBOLS:
+   D0
+   D1
+   D2
+   D3
+   D4
+   D5
+   D6
+   D7
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 3
+
+
+   EN
+   RS
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\hw2 (HW3)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        HW3
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  C:1507H         PUBLIC        Lcd4_Shift_Right
+  C:1532H         PUBLIC        Lcd8_Shift_Right
+  C:14D2H         PUBLIC        delay
+  C:13CFH         PUBLIC        _Lcd4_Write_String
+  C:14FDH         PUBLIC        Lcd4_Clear
+  C:1379H         PUBLIC        _Lcd8_Write_String
+  C:152DH         PUBLIC        Lcd8_Clear
+  C:1511H         PUBLIC        Lcd4_Shift_Left
+  C:13A4H         PUBLIC        _Lcd4_Write_Char
+  C:1537H         PUBLIC        Lcd8_Shift_Left
+  C:1525H         PUBLIC        _Lcd8_Write_Char
+  B:0098H.1       PUBLIC        TI
+  C:1317H         PUBLIC        main
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  C:125AH         PUBLIC        _Lcd4_Set_Cursor
+  C:1424H         PUBLIC        _Lcd8_Set_Cursor
+  C:14C7H         PUBLIC        _Lcd4_Cmd
+  C:12E0H         PUBLIC        Lcd4_Init
+  C:14E9H         PUBLIC        _Lcd8_Cmd
+  C:13FAH         PUBLIC        Lcd8_Init
+  C:12A4H         PUBLIC        _set_timer_values
+  B:0088H.5       PUBLIC        TF0
+  D:008CH         PUBLIC        TH0
+  D:0016H         PUBLIC        TH0_value
+  D:008DH         PUBLIC        TH1
+  C:144DH         PUBLIC        _Lcd4_Port
+  D:008AH         PUBLIC        TL0
+  D:0018H         PUBLIC        TL0_value
+  C:120AH         PUBLIC        _Lcd8_Port
+  B:0088H.4       PUBLIC        TR0
+  B:0088H.6       PUBLIC        TR1
+  C:1353H         PUBLIC        _Lcd_Delay
+  C:134DH         SYMBOL        L?0079
+  -------         PROC          L?0078
+  -------         ENDPROC       L?0078
+  C:134DH         SYMBOL        L?0079
+  -------         PROC          _LCD_DELAY
+  D:0006H         SYMBOL        a
+  -------         DO            
+  D:0002H         SYMBOL        j
+  D:0004H         SYMBOL        i
+  -------         ENDDO         
+  C:1353H         LINE#         17
+  C:1353H         LINE#         18
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 4
+
+
+  C:1353H         LINE#         21
+  C:1363H         LINE#         22
+  C:1363H         LINE#         23
+  C:1366H         LINE#         24
+  C:1366H         LINE#         25
+  C:1371H         LINE#         26
+  C:1378H         LINE#         27
+  -------         ENDPROC       _LCD_DELAY
+  -------         PROC          _LCD8_PORT
+  D:0007H         SYMBOL        a
+  C:120AH         LINE#         30
+  C:120AH         LINE#         31
+  C:120AH         LINE#         32
+  C:120EH         LINE#         33
+  C:1212H         LINE#         35
+  C:1214H         LINE#         37
+  C:1218H         LINE#         38
+  C:121CH         LINE#         40
+  C:121EH         LINE#         42
+  C:1222H         LINE#         43
+  C:1226H         LINE#         45
+  C:1228H         LINE#         47
+  C:122CH         LINE#         48
+  C:1230H         LINE#         50
+  C:1232H         LINE#         52
+  C:1236H         LINE#         53
+  C:123AH         LINE#         55
+  C:123CH         LINE#         57
+  C:1240H         LINE#         58
+  C:1244H         LINE#         60
+  C:1246H         LINE#         62
+  C:124AH         LINE#         63
+  C:124EH         LINE#         65
+  C:1250H         LINE#         67
+  C:1254H         LINE#         68
+  C:1257H         LINE#         70
+  C:1259H         LINE#         71
+  -------         ENDPROC       _LCD8_PORT
+  C:14E2H         SYMBOL        L?0081
+  -------         PROC          L?0080
+  -------         ENDPROC       L?0080
+  C:14E2H         SYMBOL        L?0081
+  -------         PROC          _LCD8_CMD
+  D:0007H         SYMBOL        a
+  C:14E9H         LINE#         72
+  C:14E9H         LINE#         73
+  C:14E9H         LINE#         74
+  C:14EBH         LINE#         75
+  C:14EBH         LINE#         76
+  C:14EBH         LINE#         77
+  C:14EEH         LINE#         78
+  C:14F0H         LINE#         79
+  -------         ENDPROC       _LCD8_CMD
+  -------         PROC          LCD8_CLEAR
+  C:152DH         LINE#         81
+  C:152DH         LINE#         82
+  C:152DH         LINE#         83
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 5
+
+
+  -------         ENDPROC       LCD8_CLEAR
+  -------         PROC          _LCD8_SET_CURSOR
+  D:001AH         SYMBOL        a
+  D:0001H         SYMBOL        b
+  C:1424H         LINE#         86
+  C:1428H         LINE#         87
+  C:1428H         LINE#         88
+  C:1433H         LINE#         89
+  C:1438H         LINE#         90
+  C:1445H         LINE#         91
+  C:144CH         LINE#         92
+  -------         ENDPROC       _LCD8_SET_CURSOR
+  -------         PROC          LCD8_INIT
+  C:13FAH         LINE#         94
+  C:13FAH         LINE#         95
+  C:13FAH         LINE#         96
+  C:13FFH         LINE#         97
+  C:1401H         LINE#         98
+  C:1403H         LINE#         100
+  C:1406H         LINE#         101
+  C:1408H         LINE#         102
+  C:140BH         LINE#         103
+  C:140DH         LINE#         104
+  C:1410H         LINE#         106
+  C:1415H         LINE#         107
+  C:141AH         LINE#         108
+  C:141FH         LINE#         109
+  -------         ENDPROC       LCD8_INIT
+  -------         PROC          _LCD8_WRITE_CHAR
+  D:0007H         SYMBOL        a
+  C:1525H         LINE#         112
+  C:1525H         LINE#         113
+  C:1525H         LINE#         114
+  C:1527H         LINE#         115
+  C:1527H         LINE#         116
+  C:1527H         LINE#         117
+  C:152AH         LINE#         118
+  C:152CH         LINE#         119
+  -------         ENDPROC       _LCD8_WRITE_CHAR
+  -------         PROC          _LCD8_WRITE_STRING
+  D:0008H         SYMBOL        a
+  -------         DO            
+  D:000BH         SYMBOL        i
+  -------         ENDDO         
+  C:1379H         LINE#         121
+  C:137FH         LINE#         122
+  C:137FH         LINE#         124
+  C:1396H         LINE#         125
+  C:13A3H         LINE#         126
+  -------         ENDPROC       _LCD8_WRITE_STRING
+  -------         PROC          LCD8_SHIFT_RIGHT
+  C:1532H         LINE#         128
+  C:1532H         LINE#         129
+  C:1532H         LINE#         130
+  -------         ENDPROC       LCD8_SHIFT_RIGHT
+  -------         PROC          LCD8_SHIFT_LEFT
+  C:1537H         LINE#         133
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 6
+
+
+  C:1537H         LINE#         134
+  C:1537H         LINE#         135
+  -------         ENDPROC       LCD8_SHIFT_LEFT
+  -------         PROC          _LCD4_PORT
+  D:0007H         SYMBOL        a
+  C:144DH         LINE#         141
+  C:144DH         LINE#         142
+  C:144DH         LINE#         143
+  C:1451H         LINE#         144
+  C:1455H         LINE#         146
+  C:1457H         LINE#         148
+  C:145BH         LINE#         149
+  C:145FH         LINE#         151
+  C:1461H         LINE#         153
+  C:1465H         LINE#         154
+  C:1469H         LINE#         156
+  C:146BH         LINE#         158
+  C:146FH         LINE#         159
+  C:1472H         LINE#         161
+  C:1474H         LINE#         162
+  -------         ENDPROC       _LCD4_PORT
+  C:14C0H         SYMBOL        L?0083
+  -------         PROC          L?0082
+  -------         ENDPROC       L?0082
+  C:14C0H         SYMBOL        L?0083
+  -------         PROC          _LCD4_CMD
+  D:0007H         SYMBOL        a
+  C:14C7H         LINE#         163
+  C:14C7H         LINE#         164
+  C:14C7H         LINE#         165
+  C:14C9H         LINE#         166
+  C:14CCH         LINE#         167
+  C:14CCH         LINE#         168
+  C:14CFH         LINE#         169
+  C:14D1H         LINE#         170
+  -------         ENDPROC       _LCD4_CMD
+  -------         PROC          LCD4_CLEAR
+  C:14FDH         LINE#         172
+  C:14FDH         LINE#         173
+  C:14FDH         LINE#         174
+  C:1502H         LINE#         175
+  -------         ENDPROC       LCD4_CLEAR
+  -------         PROC          _LCD4_SET_CURSOR
+  D:0012H         SYMBOL        a
+  D:0001H         SYMBOL        b
+  -------         DO            
+  D:0013H         SYMBOL        temp
+  D:0014H         SYMBOL        z
+  D:0015H         SYMBOL        y
+  -------         ENDDO         
+  C:125AH         LINE#         178
+  C:125EH         LINE#         179
+  C:125EH         LINE#         181
+  C:1269H         LINE#         182
+  C:1269H         LINE#         183
+  C:126FH         LINE#         184
+  C:1276H         LINE#         185
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 7
+
+
+  C:1276H         LINE#         186
+  C:1276H         LINE#         187
+  C:1276H         LINE#         188
+  C:1278H         LINE#         189
+  C:1285H         LINE#         190
+  C:1285H         LINE#         191
+  C:128BH         LINE#         192
+  C:1294H         LINE#         193
+  C:1299H         LINE#         194
+  C:129EH         LINE#         195
+  C:12A3H         LINE#         196
+  C:12A3H         LINE#         197
+  -------         ENDPROC       _LCD4_SET_CURSOR
+  -------         PROC          LCD4_INIT
+  C:12E0H         LINE#         199
+  C:12E0H         LINE#         200
+  C:12E0H         LINE#         201
+  C:12E5H         LINE#         202
+  C:12E7H         LINE#         204
+  C:12EAH         LINE#         205
+  C:12ECH         LINE#         206
+  C:12EFH         LINE#         207
+  C:12F1H         LINE#         208
+  C:12F4H         LINE#         210
+  C:12F9H         LINE#         211
+  C:12FEH         LINE#         212
+  C:1303H         LINE#         213
+  C:1308H         LINE#         214
+  C:130DH         LINE#         215
+  C:1312H         LINE#         216
+  -------         ENDPROC       LCD4_INIT
+  -------         PROC          _LCD4_WRITE_CHAR
+  D:0006H         SYMBOL        a
+  -------         DO            
+  D:0001H         SYMBOL        temp
+  D:0007H         SYMBOL        y
+  -------         ENDDO         
+  C:13A4H         LINE#         219
+  C:13A6H         LINE#         220
+  C:13A6H         LINE#         222
+  C:13AAH         LINE#         223
+  C:13AEH         LINE#         224
+  C:13B0H         LINE#         225
+  C:13BBH         LINE#         226
+  C:13BBH         LINE#         227
+  C:13BEH         LINE#         228
+  C:13C0H         LINE#         229
+  C:13C5H         LINE#         230
+  C:13C7H         LINE#         231
+  C:13CCH         LINE#         232
+  C:13CEH         LINE#         233
+  -------         ENDPROC       _LCD4_WRITE_CHAR
+  -------         PROC          _LCD4_WRITE_STRING
+  D:000DH         SYMBOL        a
+  -------         DO            
+  D:0010H         SYMBOL        i
+  -------         ENDDO         
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 8
+
+
+  C:13CFH         LINE#         235
+  C:13D5H         LINE#         236
+  C:13D5H         LINE#         238
+  C:13ECH         LINE#         239
+  C:13F9H         LINE#         240
+  -------         ENDPROC       _LCD4_WRITE_STRING
+  -------         PROC          LCD4_SHIFT_RIGHT
+  C:1507H         LINE#         242
+  C:1507H         LINE#         243
+  C:1507H         LINE#         244
+  C:150CH         LINE#         245
+  -------         ENDPROC       LCD4_SHIFT_RIGHT
+  -------         PROC          LCD4_SHIFT_LEFT
+  C:1511H         LINE#         248
+  C:1511H         LINE#         249
+  C:1511H         LINE#         250
+  C:1516H         LINE#         251
+  -------         ENDPROC       LCD4_SHIFT_LEFT
+  -------         PROC          MAIN
+  -------         DO            
+  D:0022H         SYMBOL        c
+  D:0023H         SYMBOL        text_input
+  D:0025H         SYMBOL        keypad_input
+  -------         ENDDO         
+  C:1317H         LINE#         21
+  C:1317H         LINE#         25
+  C:131AH         LINE#         26
+  C:131DH         LINE#         27
+  C:1320H         LINE#         28
+  C:1322H         LINE#         29
+  C:1324H         LINE#         32
+  C:132BH         LINE#         34
+  C:132BH         LINE#         35
+  C:1334H         LINE#         36
+  C:1339H         LINE#         37
+  C:1345H         LINE#         40
+  C:1348H         LINE#         41
+  -------         ENDPROC       MAIN
+  -------         PROC          _SET_TIMER_VALUES
+  D:0006H         SYMBOL        delay
+  -------         DO            
+  D:0029H         SYMBOL        value
+  -------         ENDDO         
+  C:12A4H         LINE#         44
+  C:12A4H         LINE#         45
+  C:12D1H         LINE#         46
+  C:12D9H         LINE#         47
+  C:12DFH         LINE#         48
+  -------         ENDPROC       _SET_TIMER_VALUES
+  -------         PROC          DELAY
+  C:14D2H         LINE#         51
+  C:14D2H         LINE#         52
+  C:14D5H         LINE#         53
+  C:14D8H         LINE#         54
+  C:14DAH         LINE#         55
+  C:14DDH         LINE#         56
+  C:14DFH         LINE#         57
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 9
+
+
+  C:14E1H         LINE#         58
+  -------         ENDPROC       DELAY
+  -------         ENDMOD        HW3
+
+  -------         MODULE        ?C?FPADD
+  C:0807H         PUBLIC        ?C?FPADD
+  C:0803H         PUBLIC        ?C?FPSUB
+  -------         ENDMOD        ?C?FPADD
+
+  -------         MODULE        ?C?FPDIV
+  C:08FBH         PUBLIC        ?C?FPDIV
+  -------         ENDMOD        ?C?FPDIV
+
+  -------         MODULE        ?C?FCAST
+  C:09A2H         PUBLIC        ?C?FCASTC
+  C:099DH         PUBLIC        ?C?FCASTI
+  C:0998H         PUBLIC        ?C?FCASTL
+  -------         ENDMOD        ?C?FCAST
+
+  -------         MODULE        ?C?CASTF
+  C:09D6H         PUBLIC        ?C?CASTF
+  -------         ENDMOD        ?C?CASTF
+
+  -------         MODULE        PRINTF
+  D:0029H         PUBLIC        ?_PRINTF?BYTE
+  D:0029H         PUBLIC        ?_SPRINTF?BYTE
+  C:0DFDH         PUBLIC        _PRINTF
+  C:0DF7H         PUBLIC        _SPRINTF
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        ?C?FPROUND
+  C:0A57H         PUBLIC        ?C?FPROUND
+  -------         ENDMOD        ?C?FPROUND
+
+  -------         MODULE        ?C?FPCONVERT
+  C:0A86H         PUBLIC        ?C?FPCONVERT
+  -------         ENDMOD        ?C?FPCONVERT
+
+  -------         MODULE        ?C?FPMUL
+  C:0B89H         PUBLIC        ?C?FPMUL
+  -------         ENDMOD        ?C?FPMUL
+
+  -------         MODULE        ?C?FTNPWR
+  C:0CBFH         PUBLIC        ?C?FTNPWR
+  -------         ENDMOD        ?C?FTNPWR
+
+  -------         MODULE        ?C?CLDPTR
+  C:0CFFH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:0D18H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0D45H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 10
+
+
+
+  -------         MODULE        ?C?LNEG
+  C:0D57H         PUBLIC        ?C?LNEG
+  -------         ENDMOD        ?C?LNEG
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:0D65H         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:0D75H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+  -------         MODULE        PUTCHAR
+  C:1475H         PUBLIC        _PUTCHAR
+  -------         ENDMOD        PUTCHAR
+
+  -------         MODULE        _GETKEY
+  C:151BH         PUBLIC        _GETKEY
+  -------         ENDMOD        _GETKEY
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD8_CLEAR?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD8_SET_CURSOR?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD8_INIT?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD8_WRITE_STRING?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD8_SHIFT_RIGHT?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD8_SHIFT_LEFT?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD4_CLEAR?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD4_SET_CURSOR?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD4_INIT?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_LCD4_WRITE_STRING?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD4_SHIFT_RIGHT?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?LCD4_SHIFT_LEFT?HW3
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 11
+
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  RS
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D0
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D1
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D2
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D3
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D4
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D5
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D6
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L1: UNRESOLVED EXTERNAL SYMBOL
+    SYMBOL:  D7
+    MODULE:  .\Objects\hw3.obj (HW3)
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 134EH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D0
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 120FH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D0
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1213H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 12
+
+
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1219H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D1
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 121DH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D2
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1223H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D2
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1227H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D3
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 122DH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D3
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1231H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D4
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1237H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D4
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 123BH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D5
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1241H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D5
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1245H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D6
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 124BH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D6
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 124FH
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 13
+
+
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D7
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1255H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D7
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1258H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RS
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 14EAH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 14EFH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RS
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1400H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RS
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1526H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 152BH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D4
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1452H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D4
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1456H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D5
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 145CH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D5
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1460H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/10/2021  23:20:43  PAGE 14
+
+
+    SYMBOL:  D6
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1466H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D6
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 146AH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D7
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1470H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  D7
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 1473H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RS
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 14C8H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 14D0H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  RS
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 13AFH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 13BFH
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 13C6H
+
+*** WARNING L2: REFERENCE MADE TO UNRESOLVED EXTERNAL
+    SYMBOL:  EN
+    MODULE:  .\Objects\hw3.obj (HW3)
+    ADDRESS: 13CDH
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 02F5H BYTE (36%) *
+******************************************************************************
+
+Program Size: data=64.1 xdata=0 code=3391
+LINK/LOCATE RUN COMPLETE.  58 WARNING(S),  0 ERROR(S)

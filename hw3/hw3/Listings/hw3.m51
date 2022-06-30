@@ -1,0 +1,467 @@
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    11/12/2021  17:57:23  PAGE 1
+
+
+BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
+C:\KEIL_V5\C51\BIN\BL51.EXE .\Objects\hw3.obj TO .\Objects\hw3 PRINT (.\Listings\hw3.m51)
+
+
+MEMORY MODEL: SMALL WITH FLOATING POINT ARITHMETIC
+
+
+INPUT MODULES INCLUDED:
+  .\Objects\hw3.obj (HW3)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPADD)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPDIV)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FCAST)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?CASTF)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (PRINTF)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPGETOPN)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPROUND)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPCONVERT)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FPMUL)
+  C:\KEIL_V5\C51\LIB\C51FPS.LIB (?C?FTNPWR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_STARTUP)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CLDOPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CSTPTR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?LNEG)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?PLDIIDATA)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?CCASE)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (PUTCHAR)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (_GETKEY)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (STRLEN)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (ATOI)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C_INIT)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (?C?IMUL)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (ISDIGIT)
+  C:\KEIL_V5\C51\LIB\C51S.LIB (ISSPACE)
+
+
+LINK MAP OF MODULE:  .\Objects\hw3 (HW3)
+
+
+            TYPE    BASE      LENGTH    RELOCATION   SEGMENT NAME
+            -----------------------------------------------------
+
+            * * * * * * *   D A T A   M E M O R Y   * * * * * * *
+            REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
+            DATA    0008H     0005H     UNIT         ?DT?_FLASH_STRING?HW3
+            DATA    000DH     0002H     UNIT         ?DT?PRINT_BUFFER?HW3
+                    000FH     0011H                  *** GAP ***
+            BIT     0020H.0   0001H.1   UNIT         _BIT_GROUP_
+                    0021H.1   0000H.7                *** GAP ***
+            DATA    0022H     0038H     UNIT         ?DT?HW3
+            DATA    005AH     001FH     UNIT         _DATA_GROUP_
+            IDATA   0079H     0001H     UNIT         ?STACK
+
+            * * * * * * *   C O D E   M E M O R Y   * * * * * * *
+            CODE    0000H     0003H     ABSOLUTE     
+                    0003H     07FDH                  *** GAP ***
+            CODE    0800H     05ADH     UNIT         ?C?LIB_CODE
+            CODE    0DADH     046FH     UNIT         ?PR?PRINTF?PRINTF
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/12/2021  17:57:23  PAGE 2
+
+
+            CODE    121CH     00FDH     UNIT         ?PR?MAIN?HW3
+            CODE    1319H     00AEH     UNIT         ?PR?_ATOI?ATOI
+            CODE    13C7H     008CH     UNIT         ?C_C51STARTUP
+            CODE    1453H     0087H     UNIT         ?CO?HW3
+            CODE    14DAH     004DH     UNIT         ?PR?_APPEND_BUFFER?HW3
+            CODE    1527H     004AH     UNIT         ?PR?_FLASH_STRING?HW3
+            CODE    1571H     0044H     UNIT         ?PR?_FLASH_CHAR?HW3
+            CODE    15B5H     003CH     UNIT         ?PR?_SET_TIMER_VALUES?HW3
+            CODE    15F1H     003BH     UNIT         ?PR?_IS_VALID?HW3
+            CODE    162CH     0034H     UNIT         ?C_INITSEG
+            CODE    1660H     002CH     UNIT         ?PR?PRINT_BUFFER?HW3
+            CODE    168CH     0027H     UNIT         ?PR?PUTCHAR?PUTCHAR
+            CODE    16B3H     0015H     UNIT         ?PR?_STRLEN?STRLEN
+            CODE    16C8H     0013H     UNIT         ?PR?FLASH_LONG?HW3
+            CODE    16DBH     0013H     UNIT         ?PR?FLASH_SHORT?HW3
+            CODE    16EEH     0013H     UNIT         ?PR?_ISSPACE?ISSPACE
+            CODE    1701H     0012H     UNIT         ?PR?_DELAY?HW3
+            CODE    1713H     0010H     UNIT         ?PR?DELAY_WITH_TIMER?HW3
+            CODE    1723H     000FH     UNIT         ?PR?_ISDIGIT?ISDIGIT
+            CODE    1732H     000AH     UNIT         ?PR?_GETKEY?_GETKEY
+
+
+
+OVERLAY MAP OF MODULE:   .\Objects\hw3 (HW3)
+
+
+SEGMENT                              BIT_GROUP          DATA_GROUP 
+  +--> CALLED SEGMENT             START    LENGTH     START    LENGTH
+---------------------------------------------------------------------
+?C_C51STARTUP                     -----    -----      -----    -----
+  +--> ?PR?MAIN?HW3
+  +--> ?C_INITSEG
+
+?PR?MAIN?HW3                      -----    -----      005AH    0003H
+  +--> ?PR?_SET_TIMER_VALUES?HW3
+  +--> ?PR?_FLASH_CHAR?HW3
+  +--> ?CO?HW3
+  +--> ?PR?PRINTF?PRINTF
+  +--> ?PR?_APPEND_BUFFER?HW3
+
+?PR?_SET_TIMER_VALUES?HW3         -----    -----      005DH    0004H
+
+?PR?_FLASH_CHAR?HW3               -----    -----      005DH    0005H
+  +--> ?PR?_IS_VALID?HW3
+  +--> ?PR?_ATOI?ATOI
+  +--> ?PR?FLASH_SHORT?HW3
+  +--> ?PR?FLASH_LONG?HW3
+
+?PR?_ATOI?ATOI                    0020H.0  0000H.1    0062H    0005H
+  +--> ?PR?_ISSPACE?ISSPACE
+  +--> ?PR?_ISDIGIT?ISDIGIT
+
+?PR?FLASH_SHORT?HW3               -----    -----      -----    -----
+  +--> ?PR?_DELAY?HW3
+
+?PR?FLASH_LONG?HW3                -----    -----      -----    -----
+  +--> ?PR?_DELAY?HW3
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/12/2021  17:57:23  PAGE 3
+
+
+
+?PR?PRINTF?PRINTF                 0020H.0  0001H.1    005DH    001CH
+  +--> ?PR?PUTCHAR?PUTCHAR
+
+?PR?_APPEND_BUFFER?HW3            -----    -----      005DH    0001H
+  +--> ?PR?_IS_VALID?HW3
+
+
+
+SYMBOL TABLE OF MODULE:  .\Objects\hw3 (HW3)
+
+  VALUE           TYPE          NAME
+  ----------------------------------
+
+  -------         MODULE        HW3
+  C:0000H         SYMBOL        _ICE_DUMMY_
+  D:0080H         PUBLIC        P0
+  D:0090H         PUBLIC        P1
+  C:1527H         PUBLIC        _flash_string
+  D:0022H         PUBLIC        flash_buffer_size
+  C:1660H         PUBLIC        print_buffer
+  C:1571H         PUBLIC        _flash_char
+  C:1701H         PUBLIC        _delay
+  B:0098H.0       PUBLIC        RI
+  D:0024H         PUBLIC        buffer_size
+  B:0098H.1       PUBLIC        TI
+  C:16C8H         PUBLIC        flash_long
+  C:16DBH         PUBLIC        flash_short
+  C:121CH         PUBLIC        main
+  D:0026H         PUBLIC        morse_lookup
+  D:0099H         PUBLIC        SBUF
+  D:0098H         PUBLIC        SCON
+  D:0089H         PUBLIC        TMOD
+  C:1713H         PUBLIC        delay_with_timer
+  C:15B5H         PUBLIC        _set_timer_values
+  B:0088H.5       PUBLIC        TF0
+  D:008CH         PUBLIC        TH0
+  D:004EH         PUBLIC        TH0_value
+  D:008DH         PUBLIC        TH1
+  C:15F1H         PUBLIC        _is_valid
+  D:008AH         PUBLIC        TL0
+  D:0050H         PUBLIC        TL0_value
+  B:0088H.4       PUBLIC        TR0
+  B:0088H.6       PUBLIC        TR1
+  C:14DAH         PUBLIC        _append_buffer
+  D:0052H         PUBLIC        flash_buffer
+  D:0056H         PUBLIC        buffer
+  -------         PROC          MAIN
+  -------         DO            
+  D:005AH         SYMBOL        fi
+  D:005CH         SYMBOL        last_input
+  -------         ENDDO         
+  C:121CH         LINE#         49
+  C:121CH         LINE#         50
+  C:1221H         LINE#         51
+  C:1223H         LINE#         52
+  C:1226H         LINE#         53
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/12/2021  17:57:23  PAGE 4
+
+
+  C:1229H         LINE#         54
+  C:122CH         LINE#         55
+  C:122EH         LINE#         56
+  C:1230H         LINE#         57
+  C:1232H         LINE#         59
+  C:1238H         LINE#         64
+  C:1238H         LINE#         65
+  C:123BH         LINE#         66
+  C:1246H         LINE#         67
+  C:1250H         LINE#         68
+  C:1258H         LINE#         69
+  C:1258H         LINE#         71
+  C:1268H         LINE#         72
+  C:1271H         LINE#         73
+  C:1276H         LINE#         74
+  C:127AH         LINE#         75
+  C:127AH         LINE#         76
+  C:127CH         LINE#         78
+  C:127FH         LINE#         79
+  C:1281H         LINE#         80
+  C:128DH         LINE#         82
+  C:1293H         LINE#         83
+  C:1298H         LINE#         84
+  C:129AH         LINE#         85
+  C:129AH         LINE#         86
+  C:12A6H         LINE#         87
+  C:12B2H         LINE#         88
+  C:12BEH         LINE#         89
+  C:12CAH         LINE#         90
+  C:12D6H         LINE#         91
+  C:12DFH         LINE#         92
+  C:12DFH         LINE#         94
+  C:12EFH         LINE#         95
+  C:12FDH         LINE#         96
+  C:1307H         LINE#         98
+  C:130DH         LINE#         99
+  C:1312H         LINE#         100
+  C:1316H         LINE#         101
+  C:1316H         LINE#         103
+  -------         ENDPROC       MAIN
+  -------         PROC          _FLASH_STRING
+  D:0008H         SYMBOL        value
+  -------         DO            
+  D:000BH         SYMBOL        i
+  -------         ENDDO         
+  C:1527H         LINE#         134
+  C:152DH         LINE#         137
+  C:1544H         LINE#         138
+  C:1557H         LINE#         139
+  C:155EH         LINE#         140
+  C:1568H         LINE#         142
+  -------         ENDPROC       _FLASH_STRING
+  -------         PROC          FLASH_LONG
+  C:16C8H         LINE#         146
+  C:16C8H         LINE#         147
+  C:16CBH         LINE#         148
+  C:16D2H         LINE#         149
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/12/2021  17:57:23  PAGE 5
+
+
+  C:16D5H         LINE#         150
+  -------         ENDPROC       FLASH_LONG
+  -------         PROC          FLASH_SHORT
+  C:16DBH         LINE#         153
+  C:16DBH         LINE#         154
+  C:16DEH         LINE#         155
+  C:16E5H         LINE#         156
+  C:16E8H         LINE#         157
+  -------         ENDPROC       FLASH_SHORT
+  -------         PROC          _FLASH_CHAR
+  D:005DH         SYMBOL        value
+  -------         DO            
+  D:005EH         SYMBOL        index
+  D:0060H         SYMBOL        i
+  -------         ENDDO         
+  C:1571H         LINE#         160
+  C:1573H         LINE#         164
+  C:157AH         LINE#         166
+  C:157AH         LINE#         168
+  C:1587H         LINE#         170
+  C:158CH         LINE#         171
+  C:159BH         LINE#         172
+  C:159EH         LINE#         173
+  C:15A0H         LINE#         174
+  C:15A0H         LINE#         175
+  C:15A3H         LINE#         176
+  C:15A3H         LINE#         177
+  C:15B4H         LINE#         179
+  -------         ENDPROC       _FLASH_CHAR
+  -------         PROC          PRINT_BUFFER
+  -------         DO            
+  D:000DH         SYMBOL        i
+  -------         ENDDO         
+  C:1660H         LINE#         181
+  C:1660H         LINE#         184
+  C:1670H         LINE#         185
+  C:1681H         LINE#         186
+  C:168BH         LINE#         187
+  -------         ENDPROC       PRINT_BUFFER
+  -------         PROC          _APPEND_BUFFER
+  D:005DH         SYMBOL        value
+  -------         DO            
+  D:0006H         SYMBOL        i
+  -------         ENDDO         
+  C:14DAH         LINE#         189
+  C:14DCH         LINE#         192
+  C:14E3H         LINE#         194
+  C:14E3H         LINE#         196
+  C:14F5H         LINE#         197
+  C:14FCH         LINE#         198
+  C:1504H         LINE#         199
+  C:1505H         LINE#         200
+  C:1505H         LINE#         201
+  C:1508H         LINE#         202
+  C:1514H         LINE#         203
+  C:151FH         LINE#         205
+  C:1526H         LINE#         206
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/12/2021  17:57:23  PAGE 6
+
+
+  C:1526H         LINE#         208
+  -------         ENDPROC       _APPEND_BUFFER
+  -------         PROC          _IS_VALID
+  D:0007H         SYMBOL        value
+  C:15F1H         LINE#         210
+  C:15F1H         LINE#         211
+  C:1623H         LINE#         212
+  C:1627H         LINE#         213
+  C:1627H         LINE#         214
+  C:1627H         LINE#         215
+  C:162BH         LINE#         216
+  C:162BH         LINE#         217
+  -------         ENDPROC       _IS_VALID
+  -------         PROC          _DELAY
+  D:0006H         SYMBOL        max
+  -------         DO            
+  D:0004H         SYMBOL        i
+  -------         ENDDO         
+  C:1701H         LINE#         219
+  C:1701H         LINE#         222
+  C:1712H         LINE#         223
+  -------         ENDPROC       _DELAY
+  -------         PROC          _SET_TIMER_VALUES
+  D:0006H         SYMBOL        delay
+  -------         DO            
+  D:005DH         SYMBOL        value
+  -------         ENDDO         
+  C:15B5H         LINE#         225
+  C:15B5H         LINE#         226
+  C:15E2H         LINE#         227
+  C:15EAH         LINE#         228
+  C:15F0H         LINE#         229
+  -------         ENDPROC       _SET_TIMER_VALUES
+  -------         PROC          DELAY_WITH_TIMER
+  C:1713H         LINE#         232
+  C:1713H         LINE#         233
+  C:1716H         LINE#         234
+  C:1719H         LINE#         235
+  C:171BH         LINE#         236
+  C:171EH         LINE#         237
+  C:1720H         LINE#         238
+  C:1722H         LINE#         239
+  -------         ENDPROC       DELAY_WITH_TIMER
+  -------         ENDMOD        HW3
+
+  -------         MODULE        ?C?FPADD
+  C:0807H         PUBLIC        ?C?FPADD
+  C:0803H         PUBLIC        ?C?FPSUB
+  -------         ENDMOD        ?C?FPADD
+
+  -------         MODULE        ?C?FPDIV
+  C:08FBH         PUBLIC        ?C?FPDIV
+  -------         ENDMOD        ?C?FPDIV
+
+  -------         MODULE        ?C?FCAST
+  C:09A2H         PUBLIC        ?C?FCASTC
+  C:099DH         PUBLIC        ?C?FCASTI
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/12/2021  17:57:23  PAGE 7
+
+
+  C:0998H         PUBLIC        ?C?FCASTL
+  -------         ENDMOD        ?C?FCAST
+
+  -------         MODULE        ?C?CASTF
+  C:09D6H         PUBLIC        ?C?CASTF
+  -------         ENDMOD        ?C?CASTF
+
+  -------         MODULE        PRINTF
+  D:005DH         PUBLIC        ?_PRINTF?BYTE
+  D:005DH         PUBLIC        ?_SPRINTF?BYTE
+  C:0E0FH         PUBLIC        _PRINTF
+  C:0E09H         PUBLIC        _SPRINTF
+  -------         ENDMOD        PRINTF
+
+  -------         MODULE        ?C?FPROUND
+  C:0A57H         PUBLIC        ?C?FPROUND
+  -------         ENDMOD        ?C?FPROUND
+
+  -------         MODULE        ?C?FPCONVERT
+  C:0A86H         PUBLIC        ?C?FPCONVERT
+  -------         ENDMOD        ?C?FPCONVERT
+
+  -------         MODULE        ?C?FPMUL
+  C:0B89H         PUBLIC        ?C?FPMUL
+  -------         ENDMOD        ?C?FPMUL
+
+  -------         MODULE        ?C?FTNPWR
+  C:0CBFH         PUBLIC        ?C?FTNPWR
+  -------         ENDMOD        ?C?FTNPWR
+
+  -------         MODULE        ?C?CLDPTR
+  C:0CFFH         PUBLIC        ?C?CLDPTR
+  -------         ENDMOD        ?C?CLDPTR
+
+  -------         MODULE        ?C?CLDOPTR
+  C:0D18H         PUBLIC        ?C?CLDOPTR
+  -------         ENDMOD        ?C?CLDOPTR
+
+  -------         MODULE        ?C?CSTPTR
+  C:0D45H         PUBLIC        ?C?CSTPTR
+  -------         ENDMOD        ?C?CSTPTR
+
+  -------         MODULE        ?C?LNEG
+  C:0D57H         PUBLIC        ?C?LNEG
+  -------         ENDMOD        ?C?LNEG
+
+  -------         MODULE        ?C?PLDIIDATA
+  C:0D65H         PUBLIC        ?C?PLDIIDATA
+  -------         ENDMOD        ?C?PLDIIDATA
+
+  -------         MODULE        ?C?CCASE
+  C:0D75H         PUBLIC        ?C?CCASE
+  -------         ENDMOD        ?C?CCASE
+
+  -------         MODULE        PUTCHAR
+  C:168CH         PUBLIC        _PUTCHAR
+  -------         ENDMOD        PUTCHAR
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  11/12/2021  17:57:23  PAGE 8
+
+
+
+  -------         MODULE        _GETKEY
+  C:1732H         PUBLIC        _GETKEY
+  -------         ENDMOD        _GETKEY
+
+  -------         MODULE        STRLEN
+  C:16B3H         PUBLIC        _STRLEN
+  -------         ENDMOD        STRLEN
+
+  -------         MODULE        ATOI
+  C:1319H         PUBLIC        _atoi
+  -------         ENDMOD        ATOI
+
+  -------         MODULE        ?C?IMUL
+  C:0D9BH         PUBLIC        ?C?IMUL
+  -------         ENDMOD        ?C?IMUL
+
+  -------         MODULE        ISDIGIT
+  C:1723H         PUBLIC        _isdigit
+  -------         ENDMOD        ISDIGIT
+
+  -------         MODULE        ISSPACE
+  C:16EEH         PUBLIC        _isspace
+  -------         ENDMOD        ISSPACE
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_FLASH_STRING?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?PRINT_BUFFER?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?DELAY_WITH_TIMER?HW3
+
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?_GETKEY?_GETKEY
+
+******************************************************************************
+* RESTRICTED VERSION WITH 0800H BYTE CODE SIZE LIMIT; USED: 037DH BYTE (43%) *
+******************************************************************************
+
+Program Size: data=104.1 xdata=0 code=3903
+LINK/LOCATE RUN COMPLETE.  4 WARNING(S),  0 ERROR(S)
